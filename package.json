@@ -1,0 +1,14 @@
+{
+  "name": "chat",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "start": "concurrently \"yarn start:client\" \"yarn start:server\"",
+    "start:client": "cd ./client && yarn start:dev",
+    "start:server": "cd ./server && yarn start:dev"
+  },
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

@@ -1,5 +1,3 @@
-import React from "react";
+import React from 'react';
 
-export const AppWithAuth = () => {
-  return <span>Yea</span>;
-}
+export const AppWithAuth = () => <span>Yea</span>;

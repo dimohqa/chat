@@ -7,12 +7,12 @@ import {
   RequestMethod,
 } from '@nestjs/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
+import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
-import { MongooseModule } from '@nestjs/mongoose';
 import { config } from './config';
 import { AuthMiddleware } from './middlewares/auth.middlewares';
-import {User} from "./schemas/user.schema";
+import { User } from './schemas/user.schema';
 
 const { mongoUri } = config;
 

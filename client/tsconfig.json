@@ -12,5 +12,6 @@
     "noImplicitThis": true,
     "strictNullChecks": true
   },
+  "include": ["./.eslintrc.js", "./src"],
   "exclude": ["../server"]
 }

@@ -1,5 +1,6 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = {
   target: 'web',
@@ -9,7 +10,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist', 'client'),
-    filename: '[name].bundle.js',
+    filename: '[name].[contenthash].bundle.js',
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -31,7 +32,13 @@ module.exports = {
       },
     ],
   },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    }
+  },
   plugins: [
+    new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.join(__dirname, 'public', 'index.html'),
     }),

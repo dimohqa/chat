@@ -6,8 +6,17 @@ module.exports = {
   env: {
     browser: true,
   },
+  plugins: [
+    'react-hooks',
+  ],
   extends: ['airbnb-typescript'],
   rules: {
+    'no-param-reassign': [2, {
+      props: false,
+    }],
     'import/prefer-default-export': 'off',
+    'react/destructuring-assignment': 0,
+    'react-hooks/rules-of-hooks': 'error',
+    'react-hooks/exhaustive-deps': 'warn',
   },
 };

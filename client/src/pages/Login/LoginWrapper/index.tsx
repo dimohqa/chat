@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import axios from 'axios';
 import { useDispatch } from 'react-redux';
 import { LoginPage } from '../LoginPage';
 import { setLoginStatus, setUser } from '../../../store/user';
+import { userApi } from '../../../api/user';
 
 export const LoginWrapper = () => {
   const [email, setEmail] = useState<string>('');
@@ -11,16 +11,13 @@ export const LoginWrapper = () => {
   const dispatch = useDispatch();
 
   const signIn = useCallback(async () => {
-    const response = await axios.post('/auth/login', {
-      email,
-      password,
-    });
+    const result = await userApi.login(email, password);
 
-    if (response.status !== 200) {
+    if (result.err) {
       return;
     }
 
-    dispatch(setUser(response.data));
+    dispatch(setUser(result.val));
     dispatch(setLoginStatus(true));
   }, [email, password]);
 

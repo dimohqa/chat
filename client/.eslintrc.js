@@ -11,6 +11,7 @@ module.exports = {
   ],
   extends: ['airbnb-typescript'],
   rules: {
+    'max-len': ['warn', { code: 120 }],
     'no-param-reassign': [2, {
       props: false,
     }],

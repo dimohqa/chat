@@ -1,18 +1,14 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-
-type User = {
-  firstName: string;
-  lastName: string;
-};
+import { User } from '../types/User';
 
 type UserState = {
-  fistName: string;
+  firstName: string;
   lastName: string;
   isLogin: boolean;
 };
 
 const initialState: UserState = {
-  fistName: '',
+  firstName: '',
   lastName: '',
   isLogin: false,
 };
@@ -23,7 +19,9 @@ const user = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<User>) {
       const { firstName, lastName } = action.payload;
-      state.fistName = firstName;
+      console.log(action.payload);
+      console.log(firstName);
+      state.firstName = firstName;
       state.lastName = lastName;
     },
     setLoginStatus(state, action: PayloadAction<boolean>) {

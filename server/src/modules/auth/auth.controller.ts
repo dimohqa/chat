@@ -59,6 +59,6 @@ export class AuthController {
       httpOnly: true,
     });
 
-    return { fistName: user.firstName, lastName: user.lastName };
+    return { firstName: user.firstName, lastName: user.lastName };
   }
 }

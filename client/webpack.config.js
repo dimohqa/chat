@@ -10,16 +10,16 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist', 'client'),
-    filename: '[name].[contents].bundle.js',
+    filename: '[name].[contenthash].bundle.js',
   },
   resolve: {
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
     alias: {
-      '@/api/': path.join(__dirname, './src/api'),
-      '@/store/': path.join(__dirname, './src/store'),
-      '@/types/': path.join(__dirname, './src/types'),
-      '@/constants/*': path.join(__dirname, './src/constants'),
+      '@/api': path.resolve(__dirname, './src/api'),
+      '@/store': path.resolve(__dirname, './src/store'),
+      '@/types': path.resolve(__dirname, './src/types'),
+      '@/constants': path.resolve(__dirname, './src/constants'),
     },
+    extensions: ['.js', '.jsx', '.ts', '.tsx'],
   },
   module: {
     rules: [

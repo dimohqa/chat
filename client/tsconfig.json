@@ -14,12 +14,13 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@/api/*": ["src/api/*"],
-      "@/store/*": ["src/store/*"],
+      "@/api/*": ["client/src/api/*"],
+      "@/store/*": ["client/src/store/*"],
       "@/types/*": ["src/types/*"],
-      "@/constants/*": ["src/constants/*"]
+      "@/constants/*": ["src/constants/*"],
+      "*": ["node_modules/*"]
     }
   },
   "include": ["./.eslintrc.js", "./src", "./webpack.config.js"],
-  "exclude": ["../server"]
+  "exclude": ["../server", "node_modules", "dist"]
 }

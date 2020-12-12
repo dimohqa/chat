@@ -1,10 +1,10 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useHistory } from 'react-router';
+import { notification } from 'antd';
 import { userApi } from '@/api/user';
 import { setUserId, setStatusLoading } from '@/store/user';
-import { useHistory } from 'react-router';
 import { RootState } from '@/store/rootReducer';
-import { notification } from 'antd';
 import { LoginPage } from '../LoginPage';
 
 export const LoginWrapper = () => {

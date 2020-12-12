@@ -1,8 +1,8 @@
 import React, { ChangeEvent } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Button, Input, Form, Row, Col, Checkbox, Typography,
 } from 'antd';
-import { Link } from 'react-router-dom';
 
 import './LoginPage.css';
 
@@ -54,9 +54,12 @@ export const LoginPage: React.FC<Props> = (props: Props) => {
                 </Row>
               </Form.Item>
               <Form.Item>
-                <Button type="primary" onClick={props.signIn} loading={props.loading}>
-                  Войти
-                </Button>
+                <Row justify="space-between" align="middle">
+                  <Button type="primary" onClick={props.signIn} loading={props.loading}>
+                    Войти
+                  </Button>
+                  <Link to="/registration">Зарегистрироваться</Link>
+                </Row>
               </Form.Item>
             </Form>
           </Col>

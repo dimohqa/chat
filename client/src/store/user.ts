@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { User } from '../types/User';
+import { User } from '@/types/User';
 
 type UserState = {
   firstName: string;
@@ -19,8 +19,7 @@ const user = createSlice({
   reducers: {
     setUser(state, action: PayloadAction<User>) {
       const { firstName, lastName } = action.payload;
-      console.log(action.payload);
-      console.log(firstName);
+
       state.firstName = firstName;
       state.lastName = lastName;
     },

@@ -1,5 +1,5 @@
 import { Ok, Err } from 'ts-results';
-import { Result } from '../types/Result';
+import { Result } from '@/types/Result';
 import { http } from './http';
 
 export const userApi = {

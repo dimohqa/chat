@@ -1,8 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
+import { userApi } from '@/api/user';
+import { setLoginStatus, setUser } from '@/store/user';
 import { LoginPage } from '../LoginPage';
-import { setLoginStatus, setUser } from '../../../store/user';
-import { userApi } from '../../../api/user';
 
 export const LoginWrapper = () => {
   const [email, setEmail] = useState<string>('');

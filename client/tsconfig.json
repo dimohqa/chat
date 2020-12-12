@@ -11,8 +11,15 @@
     "allowSyntheticDefaultImports": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/api/*": ["src/api/*"],
+      "@/store/*": ["src/store/*"],
+      "@/types/*": ["src/types/*"],
+      "@/constants/*": ["src/constants/*"]
+    }
   },
-  "include": ["./.eslintrc.js", "./src"],
+  "include": ["./.eslintrc.js", "./src", "./webpack.config.js"],
   "exclude": ["../server"]
 }

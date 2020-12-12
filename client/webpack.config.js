@@ -10,10 +10,16 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist', 'client'),
-    filename: '[name].[contenthash].bundle.js',
+    filename: '[name].[contents].bundle.js',
   },
   resolve: {
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
+    alias: {
+      '@/api/': path.join(__dirname, './src/api'),
+      '@/store/': path.join(__dirname, './src/store'),
+      '@/types/': path.join(__dirname, './src/types'),
+      '@/constants/*': path.join(__dirname, './src/constants'),
+    },
   },
   module: {
     rules: [
@@ -35,7 +41,7 @@ module.exports = {
   optimization: {
     splitChunks: {
       chunks: 'all',
-    }
+    },
   },
   plugins: [
     new CleanWebpackPlugin(),
@@ -43,5 +49,5 @@ module.exports = {
       template: path.join(__dirname, 'public', 'index.html'),
     }),
   ],
-  devtool: 'source-map'
+  devtool: 'source-map',
 };

@@ -1,8 +1,10 @@
 import React, { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { userApi } from '@/api/user';
-import { setUserId } from '@/store/user';
+import { setUserId, setStatusLoading } from '@/store/user';
 import { useHistory } from 'react-router';
+import { RootState } from '@/store/rootReducer';
+import { notification } from 'antd';
 import { LoginPage } from '../LoginPage';
 
 export const LoginWrapper = () => {
@@ -11,19 +13,42 @@ export const LoginWrapper = () => {
 
   const dispatch = useDispatch();
   const history = useHistory();
+  const loading = useSelector((state: RootState) => state.user.isLoading);
+
+  const renderErrorLogin = () => {
+    notification.error({
+      message: 'Ошибка авторизации',
+      description: 'Проверьте правильность почты и пароля',
+      duration: 3,
+    });
+  };
 
   const signIn = useCallback(async () => {
+    dispatch(setStatusLoading(true));
+
     const result = await userApi.login(email, password);
 
     if (result.err) {
+      renderErrorLogin();
+
+      dispatch(setStatusLoading(false));
       return;
     }
 
     dispatch(setUserId(result.val));
+    dispatch(setStatusLoading(false));
+
     history.push('/');
   }, [email, password]);
 
   return (
-    <LoginPage setEmail={setEmail} setPassword={setPassword} signIn={signIn} />
+    <LoginPage
+      email={email}
+      password={password}
+      loading={loading}
+      onChangeEmail={setEmail}
+      onChangePassword={setPassword}
+      signIn={signIn}
+    />
   );
 };

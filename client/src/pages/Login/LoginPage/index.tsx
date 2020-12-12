@@ -7,18 +7,22 @@ import { Link } from 'react-router-dom';
 import './LoginPage.css';
 
 type Props = {
-  setEmail: (email: string) => void;
-  setPassword: (password: string) => void;
+  email: string;
+  password: string;
+  loading: boolean;
+  onChangeEmail: (email: string) => void;
+  onChangePassword: (password: string) => void;
   signIn: () => void;
 };
 
-export const LoginPage = (props: Props) => {
+export const LoginPage: React.FC<Props> = (props: Props) => {
   const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    props.setEmail(event.target.value);
+    props.onChangeEmail(event.target.value);
   };
   const onChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
-    props.setPassword(event.target.value);
+    props.onChangePassword(event.target.value);
   };
+
   return (
     <Row className="login-page">
       <Col span={12} />
@@ -28,10 +32,20 @@ export const LoginPage = (props: Props) => {
             <Typography.Title>Добро пожаловать!</Typography.Title>
             <Form>
               <Form.Item>
-                <Input placeholder="Email" size="large" onChange={onChangeEmail} />
+                <Input
+                  placeholder="Email"
+                  size="large"
+                  value={props.email}
+                  onChange={onChangeEmail}
+                />
               </Form.Item>
               <Form.Item>
-                <Input.Password placeholder="Password" size="large" onChange={onChangePassword} />
+                <Input.Password
+                  placeholder="Пароль"
+                  size="large"
+                  value={props.password}
+                  onChange={onChangePassword}
+                />
               </Form.Item>
               <Form.Item>
                 <Row justify="space-between">
@@ -40,7 +54,9 @@ export const LoginPage = (props: Props) => {
                 </Row>
               </Form.Item>
               <Form.Item>
-                <Button type="primary" onClick={props.signIn}>Войти</Button>
+                <Button type="primary" onClick={props.signIn} loading={props.loading}>
+                  Войти
+                </Button>
               </Form.Item>
             </Form>
           </Col>

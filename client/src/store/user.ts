@@ -5,6 +5,7 @@ type UserState = {
   lastName: string;
   isLogin: boolean;
   userId: string;
+  isLoading: boolean;
 };
 
 const initialState: UserState = {
@@ -12,6 +13,7 @@ const initialState: UserState = {
   lastName: '',
   isLogin: false,
   userId: '',
+  isLoading: false,
 };
 
 const user = createSlice({
@@ -22,11 +24,15 @@ const user = createSlice({
       state.userId = action.payload.id;
       state.isLogin = true;
     },
+    setStatusLoading(state, action: PayloadAction<boolean>) {
+      state.isLoading = action.payload;
+    },
   },
 });
 
 export const {
   setUserId,
+  setStatusLoading,
 } = user.actions;
 
 export default user.reducer;

@@ -1,7 +1,8 @@
 import React, { useCallback, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { userApi } from '@/api/user';
-import { setLoginStatus, setUser } from '@/store/user';
+import { setUserId } from '@/store/user';
+import { useHistory } from 'react-router';
 import { LoginPage } from '../LoginPage';
 
 export const LoginWrapper = () => {
@@ -9,6 +10,7 @@ export const LoginWrapper = () => {
   const [password, setPassword] = useState<string>('');
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const signIn = useCallback(async () => {
     const result = await userApi.login(email, password);
@@ -17,8 +19,8 @@ export const LoginWrapper = () => {
       return;
     }
 
-    dispatch(setUser(result.val));
-    dispatch(setLoginStatus(true));
+    dispatch(setUserId(result.val));
+    history.push('/');
   }, [email, password]);
 
   return (

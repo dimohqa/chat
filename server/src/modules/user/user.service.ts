@@ -29,7 +29,7 @@ export class UserService {
     return this.userModel.findOne({ email });
   }
 
-  async findOne(object: Partial<User>) {
+  async findOne(object: Partial<UserDocument>) {
     return this.userModel.findOne(object, { password: false });
   }
 

@@ -16,8 +16,6 @@ export class User {
 
   @Prop()
   lastName: string;
-
-  _id: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

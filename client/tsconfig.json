@@ -14,8 +14,8 @@
     "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
-      "@/api/*": ["client/src/api/*"],
-      "@/store/*": ["client/src/store/*"],
+      "@/api/*": ["src/api/*"],
+      "@/store/*": ["src/store/*"],
       "@/types/*": ["src/types/*"],
       "@/constants/*": ["src/constants/*"],
       "*": ["node_modules/*"]

@@ -3,9 +3,9 @@ import { Result } from '@/types/Result';
 import { http } from './http';
 
 export const userApi = {
-  async login(email: string, password: string): Promise<Result<{ firstName: string; lastName: string }>> {
+  async login(email: string, password: string): Promise<Result<{id: string}>> {
     try {
-      const response = await http.post<{ firstName: string, lastName: string }>('/auth/login', {
+      const response = await http.post<{ id: string }>('/auth/login', {
         email,
         password,
       });

@@ -30,11 +30,10 @@ export const LoginPage: React.FC<Props> = (props: Props) => {
         <Row className="login-page" align="middle">
           <Col offset={6} span={12}>
             <Typography.Title>Добро пожаловать!</Typography.Title>
-            <Form>
+            <Form size="large">
               <Form.Item>
                 <Input
                   placeholder="Email"
-                  size="large"
                   value={props.email}
                   onChange={onChangeEmail}
                 />
@@ -42,7 +41,6 @@ export const LoginPage: React.FC<Props> = (props: Props) => {
               <Form.Item>
                 <Input.Password
                   placeholder="Пароль"
-                  size="large"
                   value={props.password}
                   onChange={onChangePassword}
                 />

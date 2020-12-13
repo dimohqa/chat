@@ -5,7 +5,7 @@ import { notification } from 'antd';
 import { userApi } from '@/api/user';
 import { setUserId, setStatusLoading } from '@/store/user';
 import { RootState } from '@/store/rootReducer';
-import { LoginPage } from '../LoginPage';
+import { LoginPage } from '../index';
 
 export const LoginWrapper = () => {
   const [email, setEmail] = useState<string>('');

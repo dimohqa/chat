@@ -20,7 +20,6 @@ export class AuthController {
   ) {}
 
   @Post('/registration')
-  @Redirect('/')
   async registration(@Body() user: User) {
     await this.UserService.create(user);
   }

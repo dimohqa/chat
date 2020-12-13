@@ -1,15 +1,20 @@
 import React, { useCallback } from 'react';
 import {
   Button,
-  Col, Form, Input, Row, Typography,
+  Col, Form, Input, notification, Row, Typography,
 } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router';
+import { useDispatch, useSelector } from 'react-redux';
+import { setLoadingStatus } from '@/store/user';
 import {
   patternPasswordContainsLowerCase,
   patternPasswordContainsOneDigit,
   patternPasswordContainsUpperCase,
 } from '@/constants/patterns';
+import { userApi } from '@/api/user';
+import { RootState } from '@/store/rootReducer';
 
 const validateMessages = {
   required: 'Поле обязательно для заполнения',
@@ -23,10 +28,34 @@ const validateMessages = {
 
 export const Registration = () => {
   const [form] = useForm();
+  const history = useHistory();
+  const dispatch = useDispatch();
 
-  const onSubmit = useCallback(() => {
+  const loading = useSelector((state: RootState) => state.user.isLoading);
 
-  }, [form]);
+  const renderErrorNotification = (error: string) => {
+    notification.error({
+      message: 'Ошибка регистрации',
+      description: error,
+      duration: 3,
+    });
+  };
+
+  const onRegistrationHandle = useCallback(async () => {
+    dispatch(setLoadingStatus(true));
+
+    const result = await userApi.registration({ ...form.getFieldsValue() });
+
+    if (result.err) {
+      renderErrorNotification(result.val);
+      dispatch(setLoadingStatus(false));
+
+      return;
+    }
+
+    dispatch(setLoadingStatus(false));
+    history.push('/login');
+  }, [form, history]);
 
   return (
     <Row style={{ height: '100%' }}>
@@ -37,9 +66,10 @@ export const Registration = () => {
               <Typography.Title>Регистрация</Typography.Title>
             </Row>
             <Form
+              size="large"
               form={form}
               requiredMark={false}
-              size="large"
+              onFinish={onRegistrationHandle}
               validateMessages={validateMessages}
             >
               <Form.Item
@@ -112,7 +142,7 @@ export const Registration = () => {
               </Form.Item>
               <Form.Item>
                 <Row justify="space-between" align="middle">
-                  <Button onClick={onSubmit} type="primary">
+                  <Button type="primary" htmlType="submit" loading={loading}>
                     Зарегистрироваться
                   </Button>
                   <Link to="/login">Уже есть аккаунт?</Link>

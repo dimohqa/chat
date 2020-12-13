@@ -30,7 +30,7 @@ export const LoginPage: React.FC<Props> = (props: Props) => {
         <Row className="login-page" align="middle">
           <Col offset={6} span={12}>
             <Typography.Title>Добро пожаловать!</Typography.Title>
-            <Form size="large">
+            <Form size="large" onFinish={props.signIn}>
               <Form.Item>
                 <Input
                   placeholder="Email"
@@ -53,7 +53,7 @@ export const LoginPage: React.FC<Props> = (props: Props) => {
               </Form.Item>
               <Form.Item>
                 <Row justify="space-between" align="middle">
-                  <Button type="primary" onClick={props.signIn} loading={props.loading}>
+                  <Button type="primary" htmlType="submit" loading={props.loading}>
                     Войти
                   </Button>
                   <Link to="/registration">Зарегистрироваться</Link>

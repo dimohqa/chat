@@ -24,7 +24,7 @@ const user = createSlice({
       state.userId = action.payload.id;
       state.isLogin = true;
     },
-    setStatusLoading(state, action: PayloadAction<boolean>) {
+    setLoadingStatus(state, action: PayloadAction<boolean>) {
       state.isLoading = action.payload;
     },
   },
@@ -32,7 +32,7 @@ const user = createSlice({
 
 export const {
   setUserId,
-  setStatusLoading,
+  setLoadingStatus,
 } = user.actions;
 
 export default user.reducer;

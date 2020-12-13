@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { notification } from 'antd';
 import { userApi } from '@/api/user';
-import { setUserId, setStatusLoading } from '@/store/user';
+import { setUserId, setLoadingStatus } from '@/store/user';
 import { RootState } from '@/store/rootReducer';
 import { LoginPage } from '../index';
 
@@ -24,19 +24,19 @@ export const LoginWrapper = () => {
   };
 
   const signIn = useCallback(async () => {
-    dispatch(setStatusLoading(true));
+    dispatch(setLoadingStatus(true));
 
     const result = await userApi.login(email, password);
 
     if (result.err) {
       renderErrorLogin();
 
-      dispatch(setStatusLoading(false));
+      dispatch(setLoadingStatus(false));
       return;
     }
 
     dispatch(setUserId(result.val));
-    dispatch(setStatusLoading(false));
+    dispatch(setLoadingStatus(false));
 
     history.push('/');
   }, [email, password]);

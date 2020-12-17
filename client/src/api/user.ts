@@ -51,7 +51,6 @@ export const userApi: UserApi = {
 
       return new Ok(response.data);
     } catch (error) {
-      console.log(error.response);
       switch (error.response.status) {
         case 403:
           return new Err('Error');

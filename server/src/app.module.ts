@@ -11,9 +11,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { config } from './config';
-import { AuthMiddleware } from './middlewares/auth.middlewares';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
-import { User } from './schemas/user.schema';
+import { AuthGuard } from './auth.guard';
 
 const { mongoUri } = config;
 
@@ -31,11 +30,15 @@ const { mongoUri } = config;
     }),
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: 'APP_GUARD',
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes(UserModule);
     consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

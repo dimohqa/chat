@@ -30,8 +30,8 @@ export const LoginWrapper = () => {
 
     if (result.err) {
       renderErrorLogin();
-
       dispatch(setLoadingStatus(false));
+
       return;
     }
 
@@ -39,7 +39,7 @@ export const LoginWrapper = () => {
     dispatch(setLoadingStatus(false));
 
     history.push('/');
-  }, [email, password]);
+  }, [email, history, password]);
 
   return (
     <LoginPage

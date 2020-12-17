@@ -18,9 +18,10 @@
       "@/store/*": ["src/store/*"],
       "@/types/*": ["src/types/*"],
       "@/constants/*": ["src/constants/*"],
+      "@/components/*": ["src/components/*"],
       "*": ["node_modules/*"]
     }
   },
-  "include": ["./.eslintrc.js", "./src", "./webpack.config.js"],
+  "include": ["./.eslintrc.js", "./src", "./index.tsx", "./webpack.config.js"],
   "exclude": ["../server", "node_modules", "dist"]
 }

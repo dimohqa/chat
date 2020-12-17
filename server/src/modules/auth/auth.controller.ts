@@ -4,13 +4,14 @@ import {
   ForbiddenException,
   HttpCode,
   Post,
-  Redirect,
+  Get,
   Res,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
+import { Response, Request } from 'express';
 import { User } from '../../schemas/user.schema';
+import { Public } from '../../helpers/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -19,11 +20,13 @@ export class AuthController {
     private AuthService: AuthService,
   ) {}
 
+  @Public()
   @Post('/registration')
   async registration(@Body() user: User) {
     await this.UserService.create(user);
   }
 
+  @Public()
   @Post('/login')
   @HttpCode(200)
   async login(
@@ -59,5 +62,10 @@ export class AuthController {
     });
 
     return { userId: user.id };
+  }
+
+  @Get('/checkAccess')
+  checkAccess(req: Request) {
+    return {};
   }
 }

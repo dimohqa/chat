@@ -3,7 +3,7 @@ import {
   Switch, Route, Redirect, RouteProps,
 } from 'react-router';
 import { AppWithAuth } from './AppWithAuth';
-import { LoginWrapper } from '../pages/Login/LoginWrapper';
+import { LoginPage } from '../pages/Login';
 import { Registration } from '../pages/Registration';
 
 interface PrivateRouteProps extends RouteProps {
@@ -20,7 +20,7 @@ const PrivateRoute = ({ Component, auth, ...rest }: PrivateRouteProps) => (
 
 export const Main = () => (
   <Switch>
-    <Route path="/login" component={LoginWrapper} />
+    <Route path="/login" component={LoginPage} />
     <Route path="/registration" component={Registration} />
     <PrivateRoute Component={AppWithAuth} auth path="/" />
   </Switch>

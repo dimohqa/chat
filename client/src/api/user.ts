@@ -24,7 +24,7 @@ export const userApi: UserApi = {
 
       return new Ok(response.data);
     } catch (error) {
-      switch (error.response.status) {
+      switch (error.status) {
         case 404:
           return new Err('Error');
         case 500:
@@ -51,7 +51,7 @@ export const userApi: UserApi = {
 
       return new Ok(response.data);
     } catch (error) {
-      switch (error.response.status) {
+      switch (error.status) {
         case 403:
           return new Err('Error');
         case 400:

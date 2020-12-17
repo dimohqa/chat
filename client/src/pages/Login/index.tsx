@@ -1,68 +1,53 @@
-import React, { ChangeEvent } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Button, Input, Form, Row, Col, Checkbox, Typography,
-} from 'antd';
+import React, { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { useHistory } from 'react-router';
+import { notification } from 'antd';
+import { userApi } from '@/api/user';
+import { setUserId } from '@/store/user';
+import { Login } from './Login';
 
-import './LoginPage.css';
+export const LoginPage = () => {
+  const [email, setEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+  const [singInIsLoading, setSignInLoadingStatus] = useState(false);
 
-type Props = {
-  email: string;
-  password: string;
-  loading: boolean;
-  onChangeEmail: (email: string) => void;
-  onChangePassword: (password: string) => void;
-  signIn: () => void;
-};
+  const dispatch = useDispatch();
+  const history = useHistory();
 
-export const LoginPage: React.FC<Props> = (props: Props) => {
-  const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-    props.onChangeEmail(event.target.value);
+  const renderErrorLogin = () => {
+    notification.error({
+      message: 'Ошибка авторизации',
+      description: 'Проверьте правильность почты и пароля',
+      duration: 3,
+    });
   };
-  const onChangePassword = (event: ChangeEvent<HTMLInputElement>) => {
-    props.onChangePassword(event.target.value);
-  };
+
+  const signIn = useCallback(async () => {
+    setSignInLoadingStatus(true);
+
+    const result = await userApi.login(email, password);
+
+    if (result.err) {
+      renderErrorLogin();
+      setSignInLoadingStatus(false);
+
+      return;
+    }
+
+    dispatch(setUserId(result.val));
+    setSignInLoadingStatus(false);
+
+    history.push('/');
+  }, [email, history, password]);
 
   return (
-    <Row className="login-page">
-      <Col span={12} />
-      <Col span={12}>
-        <Row className="login-page" align="middle">
-          <Col offset={6} span={12}>
-            <Typography.Title>Добро пожаловать!</Typography.Title>
-            <Form size="large" onFinish={props.signIn}>
-              <Form.Item>
-                <Input
-                  placeholder="Email"
-                  value={props.email}
-                  onChange={onChangeEmail}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Input.Password
-                  placeholder="Пароль"
-                  value={props.password}
-                  onChange={onChangePassword}
-                />
-              </Form.Item>
-              <Form.Item>
-                <Row justify="space-between">
-                  <Checkbox>Запомнить меня</Checkbox>
-                  <Link to="/">Забыли пароль?</Link>
-                </Row>
-              </Form.Item>
-              <Form.Item>
-                <Row justify="space-between" align="middle">
-                  <Button type="primary" htmlType="submit" loading={props.loading}>
-                    Войти
-                  </Button>
-                  <Link to="/registration">Зарегистрироваться</Link>
-                </Row>
-              </Form.Item>
-            </Form>
-          </Col>
-        </Row>
-      </Col>
-    </Row>
+    <Login
+      email={email}
+      password={password}
+      loading={singInIsLoading}
+      onChangeEmail={setEmail}
+      onChangePassword={setPassword}
+      signIn={signIn}
+    />
   );
 };

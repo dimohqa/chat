@@ -4,7 +4,7 @@ import {
   Button, Input, Form, Row, Col, Checkbox, Typography,
 } from 'antd';
 
-import './Login.css';
+import './LoginLayout.css';
 
 type Props = {
   email: string;
@@ -15,7 +15,7 @@ type Props = {
   signIn: () => void;
 };
 
-export const Login: React.FC<Props> = (props: Props) => {
+export const LoginLayout: React.FC<Props> = (props: Props) => {
   const onChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
     props.onChangeEmail(event.target.value);
   };

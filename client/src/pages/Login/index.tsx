@@ -4,7 +4,7 @@ import { useHistory } from 'react-router';
 import { notification } from 'antd';
 import { userApi } from '@/api/user';
 import { setUserId } from '@/store/user';
-import { Login } from './Login';
+import { LoginLayout } from './LoginLayout';
 
 export const LoginPage = () => {
   const [email, setEmail] = useState<string>('');
@@ -41,7 +41,7 @@ export const LoginPage = () => {
   }, [email, history, password]);
 
   return (
-    <Login
+    <LoginLayout
       email={email}
       password={password}
       loading={singInIsLoading}

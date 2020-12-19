@@ -1,5 +1,6 @@
 import { Ok, Err } from 'ts-results';
 import { Result } from '@/types/Result';
+import { User } from '@/types/User';
 import { http } from './http';
 
 // TODO: добавить корректные сообщения об ошибках
@@ -12,6 +13,7 @@ type UserApi = {
     email,
     password,
   }: {firstName: string; lastName: string; email: string; password: string}) => Promise<Result<{}>>;
+  getProfile(): Promise<Result<User>>
 };
 
 export const userApi: UserApi = {
@@ -58,6 +60,19 @@ export const userApi: UserApi = {
           return new Err(error.response.data.message);
         case 500:
           return new Err('Ошибка сервера. Попробуйте повторить запрос чуть позже.');
+        default:
+          return new Err('Default error');
+      }
+    }
+  },
+
+  async getProfile(): Promise<Result<User>> {
+    try {
+      const response = await http.get<User>('/user/get');
+
+      return new Ok(response.data);
+    } catch (error) {
+      switch (error.status) {
         default:
           return new Err('Default error');
       }

@@ -5,8 +5,15 @@ export const http = axios.create({
 });
 
 http.interceptors.response.use((config) => {
+  console.log(config);
   if (config.status === 401) {
     window.location.href = '/login';
   }
   return config;
-}, (error) => Promise.reject(error.response));
+}, (error) => {
+  console.log(error.response);
+  if (error.response.status === 401) {
+    window.location.href = '/login';
+  }
+  return Promise.reject(error);
+});

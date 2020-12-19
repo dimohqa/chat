@@ -1,12 +1,12 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Request } from '@nestjs/common';
 import { UserService } from './user.service';
 
-@Controller('user/')
+@Controller('user')
 export class UserController {
   constructor(private UserService: UserService) {}
 
   @Get('/get')
-  async get(@Param('id') _id: string) {
-    return this.UserService.findOne({ _id });
+  async get(@Request() req: { userId: string }) {
+    return this.UserService.findOne({ _id: req.userId });
   }
 }

@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Switch, Route, Redirect, RouteProps,
 } from 'react-router';
-import { AppWithAuth } from './AppWithAuth';
+import { Chat } from '../pages/Chat';
 import { LoginPage } from '../pages/Login';
 import { Registration } from '../pages/Registration';
 
@@ -22,6 +22,6 @@ export const Main = () => (
   <Switch>
     <Route path="/login" component={LoginPage} />
     <Route path="/registration" component={Registration} />
-    <PrivateRoute Component={AppWithAuth} auth path="/" />
+    <PrivateRoute Component={Chat} auth path="/" />
   </Switch>
 );

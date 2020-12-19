@@ -71,6 +71,8 @@ export class AuthGuard implements CanActivate {
         });
     }
 
+    context.switchToHttp().getRequest().userId = decodedToken.userId;
+
     return true;
   }
 }

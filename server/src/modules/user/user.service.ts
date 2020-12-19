@@ -30,7 +30,11 @@ export class UserService {
   }
 
   async findOne(object: Partial<UserDocument>) {
-    return this.userModel.findOne(object, { password: false });
+    return this.userModel.findOne(object, {
+      firstName: true,
+      lastName: true,
+      _id: false,
+    });
   }
 
   async findByName(firstName: string, lastName: string): Promise<User[]> {

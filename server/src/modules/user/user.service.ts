@@ -43,4 +43,8 @@ export class UserService {
       { password: false },
     );
   }
+
+  async getFriends(_id: string) {
+    return this.userModel.find({ _id }, { friends: true });
+  }
 }

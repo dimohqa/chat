@@ -3,6 +3,11 @@ import { Col, Row } from 'antd';
 import { userApi } from '@/api/user';
 import { User } from '@/types/User';
 import { Loader } from '@/components/Loader';
+import * as io from 'socket.io-client';
+
+const socket = io('http://localhost:3000/');
+
+socket.emit('friends', '');
 
 export const Chat = () => {
   const [user, setUser] = useState<User>({

@@ -7,9 +7,13 @@ import {
 } from '../../schemas/refreshToken.schema';
 import { randomBytes } from 'crypto';
 import { Model } from 'mongoose';
-import { sign } from 'jsonwebtoken';
+import { sign, verify } from 'jsonwebtoken';
 import { config } from '../../config';
-import { Request, Response } from 'express';
+import { JwtToken } from '../../interfaces/jwtToken';
+import { UserService } from '../user/user.service';
+import { WsException } from '@nestjs/websockets';
+import { Socket } from 'socket.io';
+import { parse } from 'cookie';
 
 const { secretKey } = config;
 
@@ -18,6 +22,7 @@ export class AuthService {
   constructor(
     @InjectModel(RefreshToken.name)
     private RefreshTokenModel: Model<RefreshTokenDocument>,
+    private UserService: UserService,
   ) {}
 
   async checkCorrectPassword(password, requestPassword) {
@@ -57,5 +62,36 @@ export class AuthService {
     return sign({ userId }, secretKey, {
       expiresIn: '1h',
     });
+  }
+
+  async checkAuthorization(client: Socket) {
+    const cookies = parse(client.handshake.headers.cookie || '');
+
+    const { token, refreshToken } = cookies;
+
+    if (!token || !refreshToken) {
+      throw new WsException('Ошибка авторизации');
+    }
+
+    const decodedToken = <JwtToken>verify(token, secretKey);
+
+    const user = await this.UserService.findOne({ _id: decodedToken.userId });
+
+    if (!user) {
+      throw new WsException('Ошибка авторизации');
+    }
+
+    const foundRefreshToken = await this.findRefreshToken(refreshToken);
+
+    if (!foundRefreshToken) {
+      throw new WsException('Ошибка авторизации');
+    }
+
+    if (decodedToken.exp < Date.now() / 1000) {
+      client.emit('updateTokens');
+      throw new WsException('Ошибка авторизации');
+    }
+
+    client.request.userId = decodedToken.userId;
   }
 }

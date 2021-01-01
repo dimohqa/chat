@@ -4,13 +4,21 @@ import { UserController } from './user.controller';
 import { User, UserSchema } from '../../schemas/user.schema';
 import { MongooseModule } from '@nestjs/mongoose';
 import { UserGateway } from './user.gateway';
+import { AuthService } from '../auth/auth.service';
+import {
+  RefreshToken,
+  RefreshTokenSchema,
+} from '../../schemas/refreshToken.schema';
 
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
+    MongooseModule.forFeature([
+      { name: RefreshToken.name, schema: RefreshTokenSchema },
+    ]),
   ],
-  controllers: [UserController],
-  providers: [UserService, UserGateway],
+  controllers: [UserController, UserGateway],
+  providers: [UserService, UserGateway, AuthService],
   exports: [UserService],
 })
 export class UserModule {}

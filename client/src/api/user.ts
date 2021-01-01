@@ -1,25 +1,23 @@
 import { Ok, Err } from 'ts-results';
 import { Result } from '@/types/Result';
-import { User } from '@/types/User';
 import { http } from './http';
 
 // TODO: добавить корректные сообщения об ошибках
 
 type UserApi = {
-  login: (email: string, password: string) => Promise<Result<{id: string}>>;
+  login: (email: string, password: string) => Promise<Result<{userId: string}>>;
   registration: ({
     firstName,
     lastName,
     email,
     password,
   }: {firstName: string; lastName: string; email: string; password: string}) => Promise<Result<{}>>;
-  getProfile(): Promise<Result<User>>
 };
 
 export const userApi: UserApi = {
-  async login(email: string, password: string): Promise<Result<{id: string}>> {
+  async login(email: string, password: string): Promise<Result<{userId: string}>> {
     try {
-      const response = await http.post<{ id: string }>('/auth/login', {
+      const response = await http.post<{ userId: string }>('/auth/login', {
         email,
         password,
       });
@@ -60,19 +58,6 @@ export const userApi: UserApi = {
           return new Err(error.response.data.message);
         case 500:
           return new Err('Ошибка сервера. Попробуйте повторить запрос чуть позже.');
-        default:
-          return new Err('Default error');
-      }
-    }
-  },
-
-  async getProfile(): Promise<Result<User>> {
-    try {
-      const response = await http.get<User>('/user/get');
-
-      return new Ok(response.data);
-    } catch (error) {
-      switch (error.status) {
         default:
           return new Err('Default error');
       }

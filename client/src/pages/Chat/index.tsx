@@ -1,40 +1,37 @@
-import React, { useEffect, useCallback, useState } from 'react';
+import React, {
+  useEffect, useState,
+} from 'react';
 import { Col, Row } from 'antd';
-import { userApi } from '@/api/user';
 import { User } from '@/types/User';
 import { Loader } from '@/components/Loader';
-import * as io from 'socket.io-client';
-
-const socket = io('http://localhost:3000/');
-
-socket.emit('friends', '');
+import { socket } from '../../helpers/socket';
 
 export const Chat = () => {
   const [user, setUser] = useState<User>({
     firstName: '',
     lastName: '',
   });
-  const [profileIsFetching, setProfileFetchingStatus] = useState<boolean>(false);
+  const [profileIsFetching, setProfileFetchingStatus] = useState<boolean>(true);
+  const [isConnectedSocket, setConnectedSocketStatus] = useState<boolean>(false);
 
-  const getProfile = useCallback(async () => {
-    setProfileFetchingStatus(true);
-    const result = await userApi.getProfile();
+  useEffect(() => {
+    socket.connect();
 
-    if (result.err) {
-      setProfileFetchingStatus(false);
-
-      return;
-    }
-
-    setUser(result.val);
-    setProfileFetchingStatus(false);
+    socket.on('connection', (response: boolean) => {
+      setConnectedSocketStatus(response);
+    });
   }, []);
 
   useEffect(() => {
-    getProfile();
-  }, [getProfile]);
+    if (isConnectedSocket) {
+      socket.emit('profile', (userData: User) => {
+        setUser(userData);
+        setProfileFetchingStatus(false);
+      });
+    }
+  }, [isConnectedSocket]);
 
-  if (profileIsFetching) {
+  if (profileIsFetching || !isConnectedSocket) {
     return <Loader size="large" />;
   }
 

@@ -4,12 +4,12 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtToken } from './interfaces/jwtToken';
+import { JwtToken } from '../../interfaces/jwtToken';
 import { verify } from 'jsonwebtoken';
-import { UserService } from './modules/user/user.service';
-import { AuthService } from './modules/auth/auth.service';
+import { UserService } from './user.service';
+import { AuthService } from '../auth/auth.service';
 import { Reflector } from '@nestjs/core';
-import { config } from './config';
+import { config } from '../../config';
 
 const { secretKey } = config;
 

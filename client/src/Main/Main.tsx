@@ -2,9 +2,9 @@ import React from 'react';
 import {
   Switch, Route, Redirect, RouteProps,
 } from 'react-router';
-import { Chat } from '../pages/Chat';
 import { LoginPage } from '../pages/Login';
 import { Registration } from '../pages/Registration';
+import { App } from '../pages/App';
 
 interface PrivateRouteProps extends RouteProps {
   Component: any;
@@ -22,6 +22,6 @@ export const Main = () => (
   <Switch>
     <Route path="/login" component={LoginPage} />
     <Route path="/registration" component={Registration} />
-    <PrivateRoute Component={Chat} auth path="/" />
+    <PrivateRoute Component={App} auth path="/" />
   </Switch>
 );

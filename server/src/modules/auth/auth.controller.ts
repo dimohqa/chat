@@ -6,10 +6,11 @@ import {
   Post,
   Get,
   Res,
+  Request,
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { Response, Request } from 'express';
+import { Response } from 'express';
 import { User } from '../../schemas/user.schema';
 import { Public } from '../../helpers/public.decorator';
 
@@ -64,8 +65,18 @@ export class AuthController {
     return { userId: user.id };
   }
 
-  @Get('/checkAccess')
-  checkAccess(req: Request) {
-    return {};
+  // TODO: тут не определен userId, поэтому создается рандомный jwt без userId. Добавить auth
+  @Get('updateToken')
+  async updateToken(
+    @Request() req: { userId: string },
+    @Res() response: Response,
+  ) {
+    const token = await this.AuthService.generateJwtToken(req.userId);
+
+    response.cookie('token', token, {
+      httpOnly: true,
+    });
+
+    return true;
   }
 }

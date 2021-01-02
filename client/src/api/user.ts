@@ -12,6 +12,7 @@ type UserApi = {
     email,
     password,
   }: {firstName: string; lastName: string; email: string; password: string}) => Promise<Result<{}>>;
+  updateToken(): Promise<Result<boolean>>;
 };
 
 export const userApi: UserApi = {
@@ -61,6 +62,16 @@ export const userApi: UserApi = {
         default:
           return new Err('Default error');
       }
+    }
+  },
+
+  async updateToken(): Promise<Result<boolean>> {
+    try {
+      const response = await http.get<boolean>('/auth/updateToken');
+
+      return new Ok(response.data);
+    } catch (error) {
+      return new Err('Error');
     }
   },
 };

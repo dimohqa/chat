@@ -5,9 +5,8 @@ import {
   RefreshToken,
   RefreshTokenDocument,
 } from '../../schemas/refreshToken.schema';
-import { randomBytes } from 'crypto';
 import { Model } from 'mongoose';
-import { sign, verify } from 'jsonwebtoken';
+import { sign, TokenExpiredError, verify } from 'jsonwebtoken';
 import { config } from '../../config';
 import { JwtToken } from '../../interfaces/jwtToken';
 import { UserService } from '../user/user.service';
@@ -29,12 +28,14 @@ export class AuthService {
     return compare(password, requestPassword);
   }
 
-  generateRefreshToken() {
-    return randomBytes(40).toString('hex');
+  generateRefreshToken(userId) {
+    return sign({ userId }, secretKey, {
+      expiresIn: '30d',
+    });
   }
 
   async createRefreshToken(id: string) {
-    const token = this.generateRefreshToken();
+    const token = this.generateRefreshToken(id);
 
     await new this.RefreshTokenModel({
       user: id,
@@ -46,8 +47,8 @@ export class AuthService {
     return token;
   }
 
-  async updateRefreshToken(refreshToken: RefreshTokenDocument) {
-    refreshToken.token = this.generateRefreshToken();
+  async updateRefreshToken(refreshToken: RefreshTokenDocument, userId: string) {
+    refreshToken.token = this.generateRefreshToken(userId);
     refreshToken.expires = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
     await refreshToken.save();
 
@@ -70,28 +71,38 @@ export class AuthService {
     const { token, refreshToken } = cookies;
 
     if (!token || !refreshToken) {
-      throw new WsException('Ошибка авторизации');
-    }
-
-    const decodedToken = <JwtToken>verify(token, secretKey);
-
-    const user = await this.UserService.findOne({ _id: decodedToken.userId });
-
-    if (!user) {
-      throw new WsException('Ошибка авторизации');
+      throw new WsException('Ошибка авторизации 1');
     }
 
     const foundRefreshToken = await this.findRefreshToken(refreshToken);
 
     if (!foundRefreshToken) {
-      throw new WsException('Ошибка авторизации');
+      throw new WsException('Ошибка авторизации 2');
     }
 
-    if (decodedToken.exp < Date.now() / 1000) {
-      client.emit('updateTokens');
-      throw new WsException('Ошибка авторизации');
+    const decodedRefreshToken = await (<JwtToken>(
+      verify(refreshToken, secretKey)
+    ));
+
+    try {
+      await (<JwtToken>verify(token, secretKey));
+    } catch (error) {
+      if (error instanceof TokenExpiredError) {
+        console.log('expired jwt token');
+        client.emit('updateToken');
+      } else {
+        throw error;
+      }
     }
 
-    client.request.userId = decodedToken.userId;
+    const user = await this.UserService.findOne({
+      _id: decodedRefreshToken.userId,
+    });
+
+    if (!user) {
+      throw new WsException('Ошибка авторизации 4');
+    }
+
+    client.request.userId = decodedRefreshToken.userId;
   }
 }

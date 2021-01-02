@@ -4,12 +4,12 @@ import {
   ExecutionContext,
   UnauthorizedException,
 } from '@nestjs/common';
-import { JwtToken } from '../../interfaces/jwtToken';
+import { JwtToken } from './interfaces/jwtToken';
 import { verify } from 'jsonwebtoken';
-import { UserService } from './user.service';
-import { AuthService } from '../auth/auth.service';
+import { UserService } from './modules/user/user.service';
+import { AuthService } from './modules/auth/auth.service';
 import { Reflector } from '@nestjs/core';
-import { config } from '../../config';
+import { config } from './config';
 
 const { secretKey } = config;
 
@@ -53,24 +53,23 @@ export class AuthGuard implements CanActivate {
       throw new UnauthorizedException();
     }
 
-    if (decodedToken.exp < Date.now() / 1000) {
-      const newRefreshToken = await this.authService.updateRefreshToken(
-        foundRefreshToken,
-      );
-      const newJwtToken = await this.authService.generateJwtToken(user.id);
-
-      context.switchToHttp().getResponse().cookie('token', newJwtToken, {
-        httpOnly: true,
-      });
-
-      context
-        .switchToHttp()
-        .getResponse()
-        .cookie('refreshToken', newRefreshToken, {
-          httpOnly: true,
-        });
-    }
-
+    //   if (decodedToken.exp < Date.now() / 1000) {
+    //     const newRefreshToken = await this.authService.updateRefreshToken(
+    //       foundRefreshToken,
+    //     );
+    //     const newJwtToken = await this.authService.generateJwtToken(user.id);
+    //
+    //     context.switchToHttp().getResponse().cookie('token', newJwtToken, {
+    //       httpOnly: true,
+    //     });
+    //
+    //     context
+    //       .switchToHttp()
+    //       .getResponse()
+    //       .cookie('refreshToken', newRefreshToken, {
+    //         httpOnly: true,
+    //       });
+    //   }
     context.switchToHttp().getRequest().userId = decodedToken.userId;
 
     return true;

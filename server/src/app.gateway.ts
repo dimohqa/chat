@@ -18,7 +18,7 @@ export class AppGateway implements OnGatewayConnection {
       await this.AuthService.checkAuthorization(client);
       client.emit('connection', true);
     } catch (error) {
-      console.log(error);
+      console.log('error connection: ', error);
       client.emit('errorAuth');
     }
   }

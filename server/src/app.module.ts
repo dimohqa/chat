@@ -8,6 +8,7 @@ import { UserModule } from './modules/user/user.module';
 import { config } from './config';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { AppGateway } from './app.gateway';
+import { DialogModule } from './modules/dialog/dialog.module';
 
 const { mongoUri } = config;
 
@@ -23,6 +24,7 @@ const { mongoUri } = config;
       useNewUrlParser: true,
       useUnifiedTopology: true,
     }),
+    DialogModule,
   ],
   controllers: [],
   providers: [AppGateway],

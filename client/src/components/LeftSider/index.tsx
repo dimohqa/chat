@@ -4,6 +4,7 @@ import { Content, Header } from 'antd/es/layout/layout';
 import { User } from '@/types/User';
 import { Avatar } from 'antd';
 import { DialogsList } from '@/components/DialogsList';
+import { Search } from '@/components/Search';
 import { socket } from '../../helpers/socket';
 
 export const LeftSider = () => {
@@ -29,6 +30,7 @@ export const LeftSider = () => {
         </div>
       </Header>
       <Content>
+        <Search />
         <DialogsList />
       </Content>
     </Sider>

@@ -6,6 +6,7 @@ export const http = axios.create({
 
 http.interceptors.response.use(
   config => {
+    // eslint-disable-next-line no-console
     console.log(config);
     if (config.status === 401) {
       window.location.href = '/login';
@@ -13,6 +14,7 @@ http.interceptors.response.use(
     return config;
   },
   error => {
+    // eslint-disable-next-line no-console
     console.log(error.response);
     if (error.response.status === 401) {
       window.location.href = '/login';

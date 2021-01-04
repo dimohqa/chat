@@ -4,8 +4,6 @@ import { Provider } from 'react-redux';
 import { Main } from './Main/Main';
 import { store } from './store';
 
-import './index.css';
-
 export const App = () => (
   <BrowserRouter>
     <Provider store={store}>

@@ -38,7 +38,7 @@ export const LoginPage = () => {
     setSignInLoadingStatus(false);
 
     history.push('/');
-  }, [email, history, password]);
+  }, [dispatch, email, history, password]);
 
   return (
     <LoginLayout

@@ -3,9 +3,7 @@ import { socket } from '../../helpers/socket';
 
 export const DialogsList = () => {
   useEffect(() => {
-    socket.emit('dialogs', (dialogs: any) => {
-      console.log(dialogs);
-    });
+    socket.emit('dialogs', () => {});
   }, []);
 
   return <div>dialogs is coming...</div>;

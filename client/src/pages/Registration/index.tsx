@@ -52,7 +52,7 @@ export const Registration = () => {
 
     dispatch(setLoadingStatus(false));
     history.push('/login');
-  }, [form, history]);
+  }, [dispatch, form, history]);
 
   return (
     <Row style={{ height: '100%' }}>

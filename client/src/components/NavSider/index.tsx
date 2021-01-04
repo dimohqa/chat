@@ -9,6 +9,18 @@ import {
 import { MenuInfo } from 'rc-menu/es/interface';
 import { socket } from '../../helpers/socket';
 
+const menuItem = {
+  margin: 0,
+  height: '50px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
+
+const icon = {
+  fontSize: '20px',
+};
+
 type Props = {
   onSelectMenuHandler: (item: MenuInfo) => void;
 };
@@ -33,14 +45,17 @@ export const NavSider = (props: Props) => {
           flexDirection: 'column',
         }}
       >
-        <Menu.Item key="chat">
-          <CommentOutlined />
+        <Menu.Item key="chat" style={menuItem}>
+          <CommentOutlined style={icon} />
         </Menu.Item>
-        <Menu.Item key="friends">
-          <TeamOutlined />
+        <Menu.Item key="friends" style={menuItem}>
+          <TeamOutlined style={icon} />
         </Menu.Item>
-        <Menu.Item style={{ marginTop: 'auto' }} onClick={onLogoutHandler}>
-          <LogoutOutlined />
+        <Menu.Item
+          style={{ ...menuItem, marginTop: 'auto' }}
+          onClick={onLogoutHandler}
+        >
+          <LogoutOutlined style={icon} />
         </Menu.Item>
       </Menu>
     </Sider>

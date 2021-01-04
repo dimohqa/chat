@@ -10,9 +10,14 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { response, Response } from 'express';
+import { Response } from 'express';
 import { User } from '../../schemas/user.schema';
 import { Public } from '../../helpers/public.decorator';
+
+const cookieOptions = {
+  httpOnly: true,
+  maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
+};
 
 @Controller('auth')
 export class AuthController {
@@ -54,13 +59,9 @@ export class AuthController {
 
     const refreshToken = await this.AuthService.createRefreshToken(user.id);
 
-    response.cookie('token', token, {
-      httpOnly: true,
-    });
+    response.cookie('token', token, cookieOptions);
 
-    response.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-    });
+    response.cookie('refreshToken', refreshToken, cookieOptions);
 
     return { userId: user.id };
   }

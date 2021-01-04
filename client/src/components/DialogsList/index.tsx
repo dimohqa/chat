@@ -8,7 +8,5 @@ export const DialogsList = () => {
     });
   }, []);
 
-  return (
-    <div>dialogs is coming...</div>
-  );
+  return <div>dialogs is coming...</div>;
 };

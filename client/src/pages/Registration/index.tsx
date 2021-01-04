@@ -1,8 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-  Button,
-  Col, Form, Input, notification, Row, Typography,
-} from 'antd';
+import { Button, Col, Form, Input, notification, Row, Typography } from 'antd';
 import { useForm } from 'antd/es/form/Form';
 import { Link } from 'react-router-dom';
 import { useHistory } from 'react-router';
@@ -72,32 +69,17 @@ export const Registration = () => {
               onFinish={onRegistrationHandle}
               validateMessages={validateMessages}
             >
-              <Form.Item
-                name="firstName"
-                rules={[{ required: true }]}
-              >
-                <Input
-                  placeholder="Имя"
-                />
+              <Form.Item name="firstName" rules={[{ required: true }]}>
+                <Input placeholder="Имя" />
               </Form.Item>
-              <Form.Item
-                name="lastName"
-                rules={[{ required: true }]}
-              >
-                <Input
-                  placeholder="Фамиля"
-                />
+              <Form.Item name="lastName" rules={[{ required: true }]}>
+                <Input placeholder="Фамиля" />
               </Form.Item>
               <Form.Item
                 name="email"
-                rules={[
-                  { required: true },
-                  { type: 'email' },
-                ]}
+                rules={[{ required: true }, { type: 'email' }]}
               >
-                <Input
-                  placeholder="Email"
-                />
+                <Input placeholder="Email" />
               </Form.Item>
               <Form.Item
                 name="password"
@@ -118,9 +100,7 @@ export const Registration = () => {
                   },
                 ]}
               >
-                <Input.Password
-                  placeholder="Пароль"
-                />
+                <Input.Password placeholder="Пароль" />
               </Form.Item>
               <Form.Item
                 name="repeatPassword"
@@ -136,9 +116,7 @@ export const Registration = () => {
                   }),
                 ]}
               >
-                <Input.Password
-                  placeholder="Повторите пароль"
-                />
+                <Input.Password placeholder="Повторите пароль" />
               </Form.Item>
               <Form.Item>
                 <Row justify="space-between" align="middle">

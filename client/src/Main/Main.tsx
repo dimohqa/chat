@@ -1,7 +1,5 @@
 import React from 'react';
-import {
-  Switch, Route, Redirect, RouteProps,
-} from 'react-router';
+import { Switch, Route, Redirect, RouteProps } from 'react-router';
 import { LoginPage } from '../pages/Login';
 import { Registration } from '../pages/Registration';
 import { App } from '../pages/App';
@@ -14,7 +12,9 @@ interface PrivateRouteProps extends RouteProps {
 const PrivateRoute = ({ Component, auth, ...rest }: PrivateRouteProps) => (
   <Route
     {...rest}
-    render={(props) => (auth ? <Component {...props} /> : <Redirect to="/login" />)}
+    render={props =>
+      auth ? <Component {...props} /> : <Redirect to="/login" />
+    }
   />
 );
 

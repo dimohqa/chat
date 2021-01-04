@@ -5,18 +5,29 @@ import { http } from './http';
 // TODO: добавить корректные сообщения об ошибках
 
 type UserApi = {
-  login: (email: string, password: string) => Promise<Result<{userId: string}>>;
+  login: (
+    email: string,
+    password: string,
+  ) => Promise<Result<{ userId: string }>>;
   registration: ({
     firstName,
     lastName,
     email,
     password,
-  }: {firstName: string; lastName: string; email: string; password: string}) => Promise<Result<{}>>;
+  }: {
+    firstName: string;
+    lastName: string;
+    email: string;
+    password: string;
+  }) => Promise<Result<{}>>;
   updateToken(): Promise<Result<boolean>>;
 };
 
 export const userApi: UserApi = {
-  async login(email: string, password: string): Promise<Result<{userId: string}>> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<Result<{ userId: string }>> {
     try {
       const response = await http.post<{ userId: string }>('/auth/login', {
         email,
@@ -29,7 +40,9 @@ export const userApi: UserApi = {
         case 404:
           return new Err('Error');
         case 500:
-          return new Err('Ошибка сервера. Попробуйте повторить запрос чуть позже.');
+          return new Err(
+            'Ошибка сервера. Попробуйте повторить запрос чуть позже.',
+          );
         default:
           return new Err('Default error');
       }
@@ -58,7 +71,9 @@ export const userApi: UserApi = {
         case 400:
           return new Err(error.response.data.message);
         case 500:
-          return new Err('Ошибка сервера. Попробуйте повторить запрос чуть позже.');
+          return new Err(
+            'Ошибка сервера. Попробуйте повторить запрос чуть позже.',
+          );
         default:
           return new Err('Default error');
       }

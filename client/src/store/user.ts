@@ -30,9 +30,6 @@ const user = createSlice({
   },
 });
 
-export const {
-  setUserId,
-  setLoadingStatus,
-} = user.actions;
+export const { setUserId, setLoadingStatus } = user.actions;
 
 export default user.reducer;

@@ -18,8 +18,6 @@ const socket = createSlice({
   },
 });
 
-export const {
-  setConnectedStatus,
-} = socket.actions;
+export const { setConnectedStatus } = socket.actions;
 
 export default socket.reducer;

@@ -1,7 +1,11 @@
 import React from 'react';
 import Sider from 'antd/es/layout/Sider';
 import { Menu } from 'antd';
-import { TeamOutlined, CommentOutlined, LogoutOutlined } from '@ant-design/icons';
+import {
+  TeamOutlined,
+  CommentOutlined,
+  LogoutOutlined,
+} from '@ant-design/icons';
 import { MenuInfo } from 'rc-menu/es/interface';
 import { socket } from '../../helpers/socket';
 
@@ -24,11 +28,17 @@ export const NavSider = (props: Props) => {
         defaultSelectedKeys={['chat']}
         onSelect={props.onSelectMenuHandler}
         style={{
-          height: '100%', display: 'flex', flexDirection: 'column',
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
         }}
       >
-        <Menu.Item key="chat"><CommentOutlined /></Menu.Item>
-        <Menu.Item key="friends"><TeamOutlined /></Menu.Item>
+        <Menu.Item key="chat">
+          <CommentOutlined />
+        </Menu.Item>
+        <Menu.Item key="friends">
+          <TeamOutlined />
+        </Menu.Item>
         <Menu.Item style={{ marginTop: 'auto' }} onClick={onLogoutHandler}>
           <LogoutOutlined />
         </Menu.Item>

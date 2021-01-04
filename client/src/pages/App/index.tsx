@@ -17,7 +17,9 @@ export const App = () => {
     setMenuItem(item.key);
   };
 
-  const isConnectedSocket = useSelector((state: RootState) => state.socket.connected);
+  const isConnectedSocket = useSelector(
+    (state: RootState) => state.socket.connected,
+  );
 
   const dispatch = useDispatch();
 
@@ -35,12 +37,8 @@ export const App = () => {
 
   return (
     <Layout style={{ height: '100%' }}>
-      <NavSider
-        onSelectMenuHandler={onSelectMenuHandler}
-      />
-      <LeftSider
-        menuItem={menuItem}
-      />
+      <NavSider onSelectMenuHandler={onSelectMenuHandler} />
+      <LeftSider menuItem={menuItem} />
       <Chat />
     </Layout>
   );

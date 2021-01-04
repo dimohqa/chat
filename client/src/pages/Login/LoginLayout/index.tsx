@@ -1,8 +1,6 @@
 import React, { ChangeEvent } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  Button, Input, Form, Row, Col, Checkbox, Typography,
-} from 'antd';
+import { Button, Input, Form, Row, Col, Checkbox, Typography } from 'antd';
 
 import './LoginLayout.css';
 
@@ -53,7 +51,11 @@ export const LoginLayout: React.FC<Props> = (props: Props) => {
               </Form.Item>
               <Form.Item>
                 <Row justify="space-between" align="middle">
-                  <Button type="primary" htmlType="submit" loading={props.loading}>
+                  <Button
+                    type="primary"
+                    htmlType="submit"
+                    loading={props.loading}
+                  >
                     Войти
                   </Button>
                   <Link to="/registration">Зарегистрироваться</Link>

@@ -7,9 +7,16 @@ import { setConnectedStatus } from '@/store/socket';
 import { RootState } from '@/store/rootReducer';
 import { Chat } from '@/components/Chat';
 import { NavSider } from '@/components/NavSider';
+import { MenuInfo } from 'rc-menu/es/interface';
 import { socket } from '../../helpers/socket';
 
 export const App = () => {
+  const [menuItem, setMenuItem] = useState<React.Key>('chat');
+
+  const onSelectMenuHandler = (item: MenuInfo) => {
+    setMenuItem(item.key);
+  };
+
   const isConnectedSocket = useSelector((state: RootState) => state.socket.connected);
 
   const dispatch = useDispatch();
@@ -28,8 +35,12 @@ export const App = () => {
 
   return (
     <Layout style={{ height: '100%' }}>
-      <NavSider />
-      <LeftSider />
+      <NavSider
+        onSelectMenuHandler={onSelectMenuHandler}
+      />
+      <LeftSider
+        menuItem={menuItem}
+      />
       <Chat />
     </Layout>
   );

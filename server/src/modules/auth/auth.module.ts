@@ -7,6 +7,7 @@ import {
   RefreshToken,
   RefreshTokenSchema,
 } from '../../schemas/refreshToken.schema';
+import { AuthGateway } from './auth.gateway';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import {
     ]),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, AuthGateway],
   exports: [AuthService],
 })
 export class AuthModule {}

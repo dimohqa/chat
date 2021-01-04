@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { AuthService } from './auth.service';
-import { Response } from 'express';
+import { response, Response } from 'express';
 import { User } from '../../schemas/user.schema';
 import { Public } from '../../helpers/public.decorator';
 

@@ -1,13 +1,13 @@
-import * as mongoose from 'mongoose';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { User } from './user.schema';
+import { Types, Document } from 'mongoose';
 
-export type RefreshTokenDocument = RefreshToken & mongoose.Document;
+export type RefreshTokenDocument = RefreshToken & Document;
 
 @Schema()
 export class RefreshToken {
-  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: User.name })
-  user: User;
+  @Prop({ type: Types.ObjectId, ref: User.name })
+  user: string;
 
   @Prop({ type: Date, default: Date.now })
   created: Date;

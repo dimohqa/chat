@@ -3009,7 +3009,7 @@ rc-mentions@~1.5.0:
     rc-trigger "^5.0.4"
     rc-util "^5.0.1"
 
-rc-menu@^8.0.1, rc-menu@^8.6.1, rc-menu@~8.10.0:
+rc-menu@^8.0.1, rc-menu@^8.10.1, rc-menu@^8.6.1, rc-menu@~8.10.0:
   version "8.10.1"
   resolved "https://registry.yarnpkg.com/rc-menu/-/rc-menu-8.10.1.tgz#5637d85760ea6bd6ead49f44ae29686c5cc59798"
   integrity sha512-HmTOLPkSrz5RcdDopD4+nI95YXR2DzdSq9ek3NX2EVgD1UHknlp1QAEJ5MompYdAqdtOspJUqgM/zNt0iQALOw==

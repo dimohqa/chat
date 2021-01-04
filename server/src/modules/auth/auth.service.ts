@@ -65,6 +65,13 @@ export class AuthService {
     });
   }
 
+  async deleteRefreshToken(user: string, token: string) {
+    await this.RefreshTokenModel.deleteOne({
+      user,
+      token,
+    });
+  }
+
   async checkAuthorization(client: Socket) {
     const cookies = parse(client.handshake.headers.cookie || '');
 
@@ -104,5 +111,7 @@ export class AuthService {
     }
 
     client.request.userId = decodedRefreshToken.userId;
+    client.request.refreshToken = refreshToken;
+    client.request.token = token;
   }
 }

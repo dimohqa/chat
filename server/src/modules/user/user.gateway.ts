@@ -12,4 +12,9 @@ export class UserGateway {
   async profile(client: Socket) {
     return await this.UserService.findOne({ _id: client.request.userId });
   }
+
+  @SubscribeMessage('friends')
+  async getFriends(client: Socket) {
+    return this.UserService.getFriends(client.request.userId);
+  }
 }

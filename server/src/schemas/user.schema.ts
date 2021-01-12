@@ -16,9 +16,6 @@ export class User {
 
   @Prop()
   lastName: string;
-
-  @Prop({ type: [Types.ObjectId], ref: User.name })
-  friends: User[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

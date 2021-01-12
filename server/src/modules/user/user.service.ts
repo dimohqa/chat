@@ -1,12 +1,16 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { hash } from 'bcrypt';
 import { User, UserDocument } from '../../schemas/user.schema';
+import { Friends, FriendsDocument } from '../../schemas/friends.schema';
 
 @Injectable()
 export class UserService {
-  constructor(@InjectModel(User.name) private userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    @InjectModel(Friends.name) private friendsModel: Model<FriendsDocument>,
+  ) {}
 
   async create(user: User) {
     const hashedPassword = await hash(user.password, 12);
@@ -17,12 +21,15 @@ export class UserService {
       throw new BadRequestException('User with this email already exists');
     }
 
-    const createdUser = new this.userModel({
+    const createdUser = await new this.userModel({
       ...user,
       password: hashedPassword,
-    });
+    }).save();
 
-    await createdUser.save();
+    await new this.friendsModel({
+      userId: createdUser._id,
+      friends: [],
+    }).save();
   }
 
   async findUserByEmail(email: string) {
@@ -37,14 +44,23 @@ export class UserService {
     });
   }
 
-  async findByName(firstName: string, lastName: string): Promise<User[]> {
-    return this.userModel.find(
-      { $or: [{ firstName }, { lastName }] },
-      { password: false },
-    );
-  }
+  async getFriends(userId: string) {
+    const data = await this.friendsModel
+      .findOne(
+        {
+          userId: new Types.ObjectId(userId),
+        },
+        { friends: true },
+      )
+      .populate({
+        path: 'friends',
+        model: User.name,
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      });
 
-  async getFriends(_id: string) {
-    return this.userModel.find({ _id }, { friends: true });
+    return data.friends;
   }
 }

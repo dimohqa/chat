@@ -8,7 +8,6 @@ export class DialogGateway {
 
   @SubscribeMessage('dialogs')
   getDialogs(client: Socket) {
-    console.log(client.request.userId);
     return this.DialogService.getDialogs(client.request.userId);
   }
 }

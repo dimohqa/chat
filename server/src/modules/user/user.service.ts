@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { hash } from 'bcrypt';
@@ -62,5 +62,9 @@ export class UserService {
       });
 
     return data.friends;
+  }
+
+  async uploadAvatar(buffer: Buffer, userId: string) {
+    return this.userModel.updateOne({ _id: userId }, { avatar: buffer });
   }
 }

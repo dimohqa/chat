@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Sider from 'antd/es/layout/Sider';
 import { Avatar, Menu } from 'antd';
 import {
@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons';
 import { MenuInfo } from 'rc-menu/es/interface';
 import { ProfileModal } from '@/components/ProfileModal';
+import { User } from '@/types/User';
 import { socket } from '../../helpers/socket';
 
 const menuItem = {
@@ -27,6 +28,9 @@ type Props = {
 };
 
 export const NavSider = (props: Props) => {
+  const [userProfile, setUserProfile] = useState<User | null>(null);
+  const [avatar, setAvatar] = useState<string | null>(null);
+
   const [
     profileModalIsVisible,
     setProfileModalVisibleStatus,
@@ -45,6 +49,18 @@ export const NavSider = (props: Props) => {
   const onCloseProfileModal = () => {
     setProfileModalVisibleStatus(false);
   };
+
+  console.log(userProfile);
+
+  useEffect(() => {
+    socket.emit('profile', (profile: User) => {
+      // eslint-disable-next-line no-buffer-constructor
+      setAvatar(new Buffer(profile.avatar, 'binary').toString('base64'));
+      setUserProfile(profile);
+    });
+  }, []);
+
+  console.log(avatar);
 
   return (
     <>

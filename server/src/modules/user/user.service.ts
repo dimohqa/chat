@@ -40,6 +40,7 @@ export class UserService {
     return this.userModel.findOne(object, {
       firstName: true,
       lastName: true,
+      avatar: true,
       _id: false,
     });
   }

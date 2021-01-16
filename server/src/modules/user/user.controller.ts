@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Post,
-  Request,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -17,16 +16,15 @@ export class UserController {
   constructor(private UserService: UserService) {}
 
   @Get('/get')
-  async get(@Request() req: { userId: string }) {
-    return this.UserService.findOne({ _id: req.userId });
+  @UseGuards(AuthGuard)
+  async get(@UserId() userId: string) {
+    return this.UserService.findOne({ _id: userId });
   }
 
   @Post('/uploadAvatar')
   @UseGuards(AuthGuard)
-  @UseInterceptors(FileInterceptor('avatar'))
+  @UseInterceptors(FileInterceptor('avatar', { dest: './uploads' }))
   async uploadAvatar(@UploadedFile() avatar, @UserId() userId: string) {
-    console.log(avatar);
-    console.log(userId);
     return this.UserService.uploadAvatar(avatar.buffer, userId);
   }
 }

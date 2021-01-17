@@ -17,8 +17,8 @@ export class User {
   @Prop()
   lastName: string;
 
-  @Prop({ type: Buffer })
-  avatar: Buffer;
+  @Prop()
+  avatar: string;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

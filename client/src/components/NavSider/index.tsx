@@ -82,6 +82,7 @@ export const NavSider = (props: Props) => {
   return (
     <>
       <ProfileModal
+        profile={userProfile}
         visible={profileModalIsVisible}
         onClose={onCloseProfileModal}
       />

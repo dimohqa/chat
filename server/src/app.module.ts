@@ -9,7 +9,6 @@ import { config } from './config';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { AppGateway } from './app.gateway';
 import { DialogModule } from './modules/dialog/dialog.module';
-import { FilesModule } from './modules/files/files.module';
 
 const { mongoUri } = config;
 
@@ -26,7 +25,6 @@ const { mongoUri } = config;
       useUnifiedTopology: true,
     }),
     DialogModule,
-    FilesModule,
   ],
   controllers: [],
   providers: [AppGateway],

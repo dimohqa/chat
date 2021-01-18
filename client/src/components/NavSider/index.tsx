@@ -19,16 +19,34 @@ const StyledSkeleton = styled(Skeleton)`
   }
 `;
 
+const StyledMenu = styled(Menu)`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`;
+
+const ItemTitle = styled.span`
+  line-height: 24px;
+  font-size: 12px;
+`;
+
+const ContentItem = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
 const menuItem = {
   margin: 0,
-  height: '50px',
+  height: '70px',
   display: 'flex',
-  justifyContent: 'center',
   alignItems: 'center',
+  justifyContent: 'center',
 };
 
 const icon = {
-  fontSize: '20px',
+  fontSize: '24px',
+  marginRight: 0,
 };
 
 type Props = {
@@ -68,15 +86,10 @@ export const NavSider = (props: Props) => {
         onClose={onCloseProfileModal}
       />
       <Sider width={70}>
-        <Menu
+        <StyledMenu
           theme="dark"
           defaultSelectedKeys={['chat']}
           onSelect={props.onSelectMenuHandler}
-          style={{
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-          }}
         >
           <Menu.Item key="avatar" style={menuItem} onClick={onOpenProfileModal}>
             <StyledSkeleton
@@ -96,18 +109,26 @@ export const NavSider = (props: Props) => {
             </StyledSkeleton>
           </Menu.Item>
           <Menu.Item key="chat" style={menuItem}>
-            <CommentOutlined style={icon} />
+            <ContentItem>
+              <CommentOutlined style={icon} />
+              <ItemTitle>Чаты</ItemTitle>
+            </ContentItem>
           </Menu.Item>
           <Menu.Item key="friends" style={menuItem}>
-            <TeamOutlined style={icon} />
+            <ContentItem>
+              <TeamOutlined style={icon} />
+              <ItemTitle>Друзья</ItemTitle>
+            </ContentItem>
           </Menu.Item>
           <Menu.Item
             style={{ ...menuItem, marginTop: 'auto' }}
             onClick={onLogoutHandler}
           >
-            <LogoutOutlined style={icon} />
+            <ContentItem>
+              <LogoutOutlined style={icon} />
+            </ContentItem>
           </Menu.Item>
-        </Menu>
+        </StyledMenu>
       </Sider>
     </>
   );

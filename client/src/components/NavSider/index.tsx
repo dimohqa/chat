@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import Sider from 'antd/es/layout/Sider';
-import { Avatar, Menu } from 'antd';
+import { Avatar, Menu, Skeleton } from 'antd';
 import {
   TeamOutlined,
   CommentOutlined,
   LogoutOutlined,
+  UserOutlined,
 } from '@ant-design/icons';
 import { MenuInfo } from 'rc-menu/es/interface';
 import { ProfileModal } from '@/components/ProfileModal';
 import { User } from '@/types/User';
 import { socket } from '../../helpers/socket';
+
+import './NavSider.css';
 
 const menuItem = {
   margin: 0,
@@ -29,7 +32,6 @@ type Props = {
 
 export const NavSider = (props: Props) => {
   const [userProfile, setUserProfile] = useState<User | null>(null);
-  const [avatar, setAvatar] = useState<string | null>(null);
 
   const [
     profileModalIsVisible,
@@ -54,16 +56,12 @@ export const NavSider = (props: Props) => {
 
   useEffect(() => {
     socket.emit('profile', (profile: User) => {
-      // eslint-disable-next-line no-buffer-constructor
-      setAvatar(new Buffer(profile.avatar, 'binary').toString('base64'));
       setUserProfile(profile);
     });
   }, []);
 
-  console.log(avatar);
-
   return (
-    <>
+    <div className="nav-sider">
       <ProfileModal
         visible={profileModalIsVisible}
         onClose={onCloseProfileModal}
@@ -80,7 +78,19 @@ export const NavSider = (props: Props) => {
           }}
         >
           <Menu.Item key="avatar" style={menuItem} onClick={onOpenProfileModal}>
-            <Avatar />
+            <Skeleton
+              active
+              loading={userProfile === null}
+              avatar={{ size: 36, shape: 'circle' }}
+              paragraph={false}
+            >
+              <Avatar
+                src={
+                  userProfile === null ? <UserOutlined /> : userProfile!.avatar
+                }
+                size={36}
+              />
+            </Skeleton>
           </Menu.Item>
           <Menu.Item key="chat" style={menuItem}>
             <CommentOutlined style={icon} />
@@ -96,6 +106,6 @@ export const NavSider = (props: Props) => {
           </Menu.Item>
         </Menu>
       </Sider>
-    </>
+    </div>
   );
 };

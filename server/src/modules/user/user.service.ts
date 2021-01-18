@@ -65,7 +65,7 @@ export class UserService {
     return data.friends;
   }
 
-  async uploadAvatar(buffer: Buffer, userId: string) {
-    return this.userModel.updateOne({ _id: userId }, { avatar: buffer });
+  async saveAvatarFilename(filename: string, userId: string) {
+    return this.userModel.updateOne({ _id: userId }, { avatar: filename });
   }
 }

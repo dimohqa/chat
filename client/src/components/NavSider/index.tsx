@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styled from 'styled-components';
 import Sider from 'antd/es/layout/Sider';
 import { Avatar, Menu, Skeleton } from 'antd';
 import {
@@ -12,7 +13,11 @@ import { ProfileModal } from '@/components/ProfileModal';
 import { User } from '@/types/User';
 import { socket } from '../../helpers/socket';
 
-import './NavSider.css';
+const StyledSkeleton = styled(Skeleton)`
+  .ant-skeleton-header {
+    padding-right: 0;
+  }
+`;
 
 const menuItem = {
   margin: 0,
@@ -32,7 +37,6 @@ type Props = {
 
 export const NavSider = (props: Props) => {
   const [userProfile, setUserProfile] = useState<User | null>(null);
-
   const [
     profileModalIsVisible,
     setProfileModalVisibleStatus,
@@ -44,15 +48,12 @@ export const NavSider = (props: Props) => {
       window.location.href = '/login';
     });
   };
-
   const onOpenProfileModal = () => {
     setProfileModalVisibleStatus(true);
   };
   const onCloseProfileModal = () => {
     setProfileModalVisibleStatus(false);
   };
-
-  console.log(userProfile);
 
   useEffect(() => {
     socket.emit('profile', (profile: User) => {
@@ -61,7 +62,7 @@ export const NavSider = (props: Props) => {
   }, []);
 
   return (
-    <div className="nav-sider">
+    <>
       <ProfileModal
         visible={profileModalIsVisible}
         onClose={onCloseProfileModal}
@@ -78,19 +79,21 @@ export const NavSider = (props: Props) => {
           }}
         >
           <Menu.Item key="avatar" style={menuItem} onClick={onOpenProfileModal}>
-            <Skeleton
+            <StyledSkeleton
               active
               loading={userProfile === null}
               avatar={{ size: 36, shape: 'circle' }}
               paragraph={false}
             >
-              <Avatar
-                src={
-                  userProfile === null ? <UserOutlined /> : userProfile!.avatar
-                }
-                size={36}
-              />
-            </Skeleton>
+              {userProfile && (
+                <Avatar
+                  src={
+                    !userProfile.avatar ? <UserOutlined /> : userProfile.avatar
+                  }
+                  size={36}
+                />
+              )}
+            </StyledSkeleton>
           </Menu.Item>
           <Menu.Item key="chat" style={menuItem}>
             <CommentOutlined style={icon} />
@@ -106,6 +109,6 @@ export const NavSider = (props: Props) => {
           </Menu.Item>
         </Menu>
       </Sider>
-    </div>
+    </>
   );
 };

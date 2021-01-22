@@ -12,16 +12,7 @@ import {
 } from '@/constants/patterns';
 import { userApi } from '@/api/user';
 import { RootState } from '@/store/rootReducer';
-
-const validateMessages = {
-  required: 'Поле обязательно для заполнения',
-  types: {
-    email: 'Неккоректный формат почты',
-  },
-  string: {
-    range: 'Пароль должен быть длиной от 8 до 30 символов',
-  },
-};
+import { validateMessages } from '@/constants/validateMessages';
 
 export const Registration = () => {
   const [form] = useForm();

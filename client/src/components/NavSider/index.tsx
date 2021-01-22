@@ -54,7 +54,12 @@ type Props = {
 };
 
 export const NavSider = (props: Props) => {
-  const [userProfile, setUserProfile] = useState<User | null>(null);
+  const [userProfile, setUserProfile] = useState<User>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    avatar: '',
+  });
   const [
     profileModalIsVisible,
     setProfileModalVisibleStatus,
@@ -81,11 +86,14 @@ export const NavSider = (props: Props) => {
 
   return (
     <>
-      <ProfileModal
-        profile={userProfile}
-        visible={profileModalIsVisible}
-        onClose={onCloseProfileModal}
-      />
+      {profileModalIsVisible && (
+        <ProfileModal
+          profile={userProfile}
+          visible={profileModalIsVisible}
+          onClose={onCloseProfileModal}
+          onChangeUserProfile={setUserProfile}
+        />
+      )}
       <Sider width={70}>
         <StyledMenu
           theme="dark"

@@ -1,4 +1,9 @@
-import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { hash } from 'bcrypt';
@@ -46,6 +51,15 @@ export class UserService {
     });
   }
 
+  async getById(userId: string) {
+    return this.userModel.findById(userId, {
+      firstName: true,
+      lastName: true,
+      avatar: true,
+      email: true,
+    });
+  }
+
   async getFriends(userId: string) {
     const data = await this.friendsModel
       .findOne(
@@ -68,5 +82,31 @@ export class UserService {
 
   async saveAvatarFilename(filename: string, userId: string) {
     return this.userModel.updateOne({ _id: userId }, { avatar: filename });
+  }
+
+  async update(
+    user: {
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+    },
+    userId: string,
+  ) {
+    if (user.email) {
+      const emailAlreadyExist = await this.userModel.findOne({
+        email: user.email,
+      });
+
+      if (emailAlreadyExist) {
+        throw new HttpException(
+          'Пользователь с таким email уже существует.',
+          HttpStatus.CONFLICT,
+        );
+      }
+    }
+
+    await this.userModel.updateOne({ _id: userId }, user);
+
+    return user;
   }
 }

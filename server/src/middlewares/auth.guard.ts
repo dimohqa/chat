@@ -3,12 +3,16 @@ import { AuthService } from '../modules/auth/auth.service';
 import { JwtToken } from '../interfaces/jwtToken';
 import { verify } from 'jsonwebtoken';
 import { config } from '../config';
+import { UserService } from '../modules/user/user.service';
 
 const { secretKey } = config;
 
 @Injectable()
 export class AuthGuard implements CanActivate {
-  constructor(private AuthService: AuthService) {}
+  constructor(
+    private AuthService: AuthService,
+    private UserService: UserService,
+  ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
@@ -29,7 +33,11 @@ export class AuthGuard implements CanActivate {
 
     const decodedToken = await (<JwtToken>verify(refreshToken, secretKey));
 
-    request.userId = decodedToken.userId;
+    if (!decodedToken) {
+      return false;
+    }
+
+    request.user = await this.UserService.getById(decodedToken.userId);
 
     return true;
   }

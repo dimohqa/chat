@@ -1,10 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Form, Input, Modal, Upload } from 'antd';
 import { UploadOutlined } from '@ant-design/icons';
-import { User } from '@/types/User';
 import styled from 'styled-components';
 import { useForm } from 'antd/es/form/Form';
 import { validateMessages } from '@/constants/validateMessages';
+import { userApi } from '@/api/user';
+import { User } from '@/types/User';
+import ImgCrop from 'antd-img-crop';
+import { UploadFile } from 'antd/es/upload/interface';
+import { UploadChangeParam } from 'antd/lib/upload';
 
 const Header = styled.div`
   display: flex;
@@ -19,26 +23,72 @@ const layout = {
 };
 
 type Props = {
-  profile: User | null;
+  profile: { [index: string]: string } & User;
   visible: boolean;
   onClose: () => void;
+  onChangeUserProfile: (user: User) => void;
 };
 
 export const ProfileModal = (props: Props) => {
   const [form] = useForm();
+  const [
+    changedUserDataIsFetching,
+    setChangedUserDataLoadingStatus,
+  ] = useState<boolean>(false);
+
+  const onChangeUserData = async () => {
+    setChangedUserDataLoadingStatus(true);
+
+    const newData = Object.keys(form.getFieldsValue())
+      .filter(key => form.getFieldValue(key) !== props.profile[key])
+      .reduce(
+        (res, key) => ({
+          ...res,
+          [key]: form.getFieldValue(key),
+        }),
+        {},
+      );
+
+    const result = await userApi.patch(newData);
+
+    if (result.err) {
+      setChangedUserDataLoadingStatus(false);
+
+      return;
+    }
+
+    props.onChangeUserProfile({ ...props.profile, ...result.val });
+
+    setChangedUserDataLoadingStatus(false);
+    props.onClose();
+  };
+
+  const handleChange = (info: UploadChangeParam<UploadFile<any>>) => {
+    if (info.file.status === 'done') {
+      props.onChangeUserProfile({
+        ...props.profile,
+        avatar: info.file.response.filename,
+      });
+    }
+  };
 
   useEffect(() => {
     form.setFieldsValue({
-      firstName: props.profile?.firstName,
-      lastName: props.profile?.lastName,
-      email: props.profile?.email,
+      firstName: props.profile.firstName,
+      lastName: props.profile.lastName,
+      email: props.profile.email,
     });
   }, [form, props.profile]);
 
   return (
     <Modal
       footer={[
-        <Button key="submit" type="primary">
+        <Button
+          key="submit"
+          type="primary"
+          onClick={onChangeUserData}
+          loading={changedUserDataIsFetching}
+        >
           Изменить
         </Button>,
         <Button key="close" onClick={props.onClose}>
@@ -50,19 +100,26 @@ export const ProfileModal = (props: Props) => {
       forceRender
     >
       <Header>
-        <Avatar size={128} src={props.profile?.avatar} />
-        <Upload action="user/uploadAvatar" showUploadList={false} name="avatar">
-          <Button
-            type="primary"
-            shape="round"
-            icon={<UploadOutlined />}
-            style={{
-              marginTop: '8px',
-            }}
+        <Avatar size={128} src={props.profile.avatar} />
+        <ImgCrop rotate>
+          <Upload
+            action="user/uploadAvatar"
+            showUploadList={false}
+            onChange={handleChange}
+            name="avatar"
           >
-            Выбрать фото
-          </Button>
-        </Upload>
+            <Button
+              type="primary"
+              shape="round"
+              icon={<UploadOutlined />}
+              style={{
+                marginTop: '8px',
+              }}
+            >
+              Выбрать фото
+            </Button>
+          </Upload>
+        </ImgCrop>
       </Header>
       <Form
         form={form}
@@ -82,12 +139,6 @@ export const ProfileModal = (props: Props) => {
           rules={[{ required: true }, { type: 'email' }]}
         >
           <Input />
-        </Form.Item>
-        <Form.Item label="Новый пароль" name="newPassword">
-          <Input.Password />
-        </Form.Item>
-        <Form.Item label="Повторите пароль" name="newPassword">
-          <Input.Password />
         </Form.Item>
       </Form>
     </Modal>

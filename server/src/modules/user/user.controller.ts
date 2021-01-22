@@ -1,6 +1,8 @@
 import {
+  Body,
   Controller,
   Get,
+  Patch,
   Post,
   UploadedFile,
   UseGuards,
@@ -12,6 +14,7 @@ import { UserId } from '../../helpers/user-id.decorator';
 import { AuthGuard } from '../../middlewares/auth.guard';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { User } from '../../schemas/user.schema';
 
 @Controller('user')
 export class UserController {
@@ -44,5 +47,19 @@ export class UserController {
     return {
       filename: avatar.filename,
     };
+  }
+
+  @Patch()
+  @UseGuards(AuthGuard)
+  async update(
+    @Body()
+    user: {
+      firstName?: string;
+      lastName?: string;
+      email?: string;
+    },
+    @UserId() userId,
+  ) {
+    return this.UserService.update(user, userId);
   }
 }

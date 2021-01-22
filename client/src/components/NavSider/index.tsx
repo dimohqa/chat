@@ -20,7 +20,7 @@ const StyledSkeleton = styled(Skeleton)`
 `;
 
 const StyledMenu = styled(Menu)`
-  height: 100%;
+  height: calc(100% - 70px);
   display: flex;
   flex-direction: column;
 `;
@@ -34,6 +34,19 @@ const ContentItem = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+`;
+
+const ButtonAvatar = styled.div`
+  padding: 0 16px;
+  height: 70px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &:hover {
+    cursor: pointer;
+  }
 `;
 
 const menuItem = {
@@ -94,29 +107,28 @@ export const NavSider = (props: Props) => {
           onChangeUserProfile={setUserProfile}
         />
       )}
-      <Sider width={70}>
+      <Sider width={80}>
+        <StyledSkeleton
+          active
+          loading={userProfile === null}
+          avatar={{ size: 48, shape: 'circle' }}
+          paragraph={false}
+        >
+          {userProfile && (
+            <ButtonAvatar onClick={onOpenProfileModal}>
+              <Avatar
+                size={48}
+                src={userProfile.avatar ? userProfile.avatar : undefined}
+                icon={!userProfile.avatar && <UserOutlined />}
+              />
+            </ButtonAvatar>
+          )}
+        </StyledSkeleton>
         <StyledMenu
           theme="dark"
           defaultSelectedKeys={['chat']}
           onSelect={props.onSelectMenuHandler}
         >
-          <Menu.Item key="avatar" style={menuItem} onClick={onOpenProfileModal}>
-            <StyledSkeleton
-              active
-              loading={userProfile === null}
-              avatar={{ size: 36, shape: 'circle' }}
-              paragraph={false}
-            >
-              {userProfile && (
-                <Avatar
-                  src={
-                    !userProfile.avatar ? <UserOutlined /> : userProfile.avatar
-                  }
-                  size={36}
-                />
-              )}
-            </StyledSkeleton>
-          </Menu.Item>
           <Menu.Item key="chat" style={menuItem}>
             <ContentItem>
               <CommentOutlined style={icon} />

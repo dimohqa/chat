@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Avatar, Button, Form, Input, Modal, Upload } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
+import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
 import { useForm } from 'antd/es/form/Form';
 import { validateMessages } from '@/constants/validateMessages';
@@ -100,7 +100,11 @@ export const ProfileModal = (props: Props) => {
       forceRender
     >
       <Header>
-        <Avatar size={128} src={props.profile.avatar} />
+        <Avatar
+          size={128}
+          src={props.profile.avatar && props.profile.avatar}
+          icon={!props.profile.avatar && <UserOutlined />}
+        />
         <ImgCrop rotate>
           <Upload
             action="user/uploadAvatar"

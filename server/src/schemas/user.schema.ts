@@ -17,7 +17,7 @@ export class User {
   @Prop()
   lastName: string;
 
-  @Prop()
+  @Prop({ default: '' })
   avatar: string;
 }
 

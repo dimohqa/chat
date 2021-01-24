@@ -10,9 +10,9 @@ import {
   patternPasswordContainsOneDigit,
   patternPasswordContainsUpperCase,
 } from '@/constants/patterns';
-import { userApi } from '@/api/user';
 import { RootState } from '@/store/rootReducer';
 import { validateMessages } from '@/constants/validateMessages';
+import { authApi } from '@/api/auth';
 
 export const Registration = () => {
   const [form] = useForm();
@@ -32,7 +32,7 @@ export const Registration = () => {
   const onRegistrationHandle = useCallback(async () => {
     dispatch(setLoadingStatus(true));
 
-    const result = await userApi.registration({ ...form.getFieldsValue() });
+    const result = await authApi.registration({ ...form.getFieldsValue() });
 
     if (result.err) {
       renderErrorNotification(result.val);

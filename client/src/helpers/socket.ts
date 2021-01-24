@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { userApi } from '@/api/user';
+import { authApi } from '@/api/auth';
 
 export const socket = io('http://localhost:3000/', {
   autoConnect: false,
@@ -11,5 +11,5 @@ socket.on('errorAuth', () => {
 });
 
 socket.on('updateToken', async () => {
-  await userApi.updateToken();
+  await authApi.updateToken();
 });

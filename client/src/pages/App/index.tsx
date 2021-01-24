@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Layout } from 'antd';
 import { Loader } from '@/components/Loader';
 import { LeftSider } from '@/components/LeftSider';
@@ -7,16 +7,9 @@ import { setConnectedStatus } from '@/store/socket';
 import { RootState } from '@/store/rootReducer';
 import { Chat } from '@/components/Chat';
 import { NavSider } from '@/components/NavSider';
-import { MenuInfo } from 'rc-menu/es/interface';
 import { socket } from '../../helpers/socket';
 
 export const App = () => {
-  const [menuItem, setMenuItem] = useState<React.Key>('chat');
-
-  const onSelectMenuHandler = (item: MenuInfo) => {
-    setMenuItem(item.key);
-  };
-
   const isConnectedSocket = useSelector(
     (state: RootState) => state.socket.connected,
   );
@@ -37,8 +30,8 @@ export const App = () => {
 
   return (
     <Layout style={{ height: '100%' }}>
-      <NavSider onSelectMenuHandler={onSelectMenuHandler} />
-      <LeftSider menuItem={menuItem} />
+      <NavSider />
+      <LeftSider />
       <Chat />
     </Layout>
   );

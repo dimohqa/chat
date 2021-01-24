@@ -2,7 +2,6 @@ import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { Controller } from '@nestjs/common';
 import { UserService } from './user.service';
-import { User } from '../../schemas/user.schema';
 
 @Controller()
 @WebSocketGateway()
@@ -12,10 +11,5 @@ export class UserGateway {
   @SubscribeMessage('profile')
   async profile(client: Socket) {
     return await this.UserService.findOne({ _id: client.request.userId });
-  }
-
-  @SubscribeMessage('friends')
-  async getFriends(client: Socket) {
-    return this.UserService.getFriends(client.request.userId);
   }
 }

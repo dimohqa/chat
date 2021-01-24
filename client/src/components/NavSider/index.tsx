@@ -8,9 +8,10 @@ import {
   LogoutOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { MenuInfo } from 'rc-menu/es/interface';
+import { SelectInfo } from 'rc-menu/es/interface';
 import { ProfileModal } from '@/components/ProfileModal';
 import { User } from '@/types/User';
+import { useHistory } from 'react-router';
 import { socket } from '../../helpers/socket';
 
 const StyledSkeleton = styled(Skeleton)`
@@ -62,11 +63,7 @@ const icon = {
   marginRight: 0,
 };
 
-type Props = {
-  onSelectMenuHandler: (item: MenuInfo) => void;
-};
-
-export const NavSider = (props: Props) => {
+export const NavSider = () => {
   const [userProfile, setUserProfile] = useState<User>({
     firstName: '',
     lastName: '',
@@ -78,17 +75,24 @@ export const NavSider = (props: Props) => {
     setProfileModalVisibleStatus,
   ] = useState<boolean>(false);
 
+  const history = useHistory();
+
   const onLogoutHandler = async () => {
     socket.emit('logout', () => {
       socket.close();
       window.location.href = '/login';
     });
   };
+
   const onOpenProfileModal = () => {
     setProfileModalVisibleStatus(true);
   };
   const onCloseProfileModal = () => {
     setProfileModalVisibleStatus(false);
+  };
+
+  const onSelectItemMenu = (info: SelectInfo) => {
+    history.push(info.key.toString());
   };
 
   useEffect(() => {
@@ -126,8 +130,8 @@ export const NavSider = (props: Props) => {
         </StyledSkeleton>
         <StyledMenu
           theme="dark"
-          defaultSelectedKeys={['chat']}
-          onSelect={props.onSelectMenuHandler}
+          defaultSelectedKeys={[history.location.pathname.split('/')[1]]}
+          onSelect={onSelectItemMenu}
         >
           <Menu.Item key="chat" style={menuItem}>
             <ContentItem>

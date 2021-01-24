@@ -1,28 +1,15 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import Sider from 'antd/es/layout/Sider';
 import { DialogsList } from '@/components/DialogsList';
 import { FriendsList } from '@/components/FriendsList';
+import { Redirect, Route, Switch } from 'react-router';
 
-type Props = {
-  menuItem: React.Key;
-};
-
-export const LeftSider = (props: Props) => {
-  const renderComponent = useMemo(() => {
-    if (props.menuItem === 'chat') {
-      return <DialogsList />;
-    }
-
-    if (props.menuItem === 'friends') {
-      return <FriendsList />;
-    }
-
-    return <DialogsList />;
-  }, [props.menuItem]);
-
-  return (
-    <Sider width="30%" theme="light">
-      {renderComponent}
-    </Sider>
-  );
-};
+export const LeftSider = () => (
+  <Sider width="30%" theme="light">
+    <Switch>
+      <Route exact path="/chat" component={DialogsList} />
+      <Route exact path="/friends" component={FriendsList} />
+      <Redirect to="/chat" />
+    </Switch>
+  </Sider>
+);

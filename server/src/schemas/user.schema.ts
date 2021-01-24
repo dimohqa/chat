@@ -22,3 +22,8 @@ export class User {
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
+
+UserSchema.index({
+  firstName: 'text',
+  lastName: 'text',
+});

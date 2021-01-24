@@ -5,17 +5,26 @@ import { Search } from '@/components/Search';
 import { Friend } from '@/types/Friend';
 import { Loader } from '@/components/Loader';
 import { FriendCard } from '@/components/FriendsList/FriendCard';
-import { socket } from '../../helpers/socket';
+import { FriendsApi } from '@/api/friends';
 
 export const FriendsList = () => {
   const [friendsIsFetching, setFriendsFetchingStatus] = useState<boolean>(true);
   const [friendsList, setFriendsList] = useState<Friend[]>();
 
-  useEffect(() => {
-    socket.emit('friends', (friends: Friend[]) => {
+  const getFriends = async (searchString: string) => {
+    const result = await FriendsApi.searchByQuery(searchString);
+
+    if (result.err) {
       setFriendsFetchingStatus(false);
-      setFriendsList(friends);
-    });
+      return;
+    }
+
+    setFriendsFetchingStatus(false);
+    setFriendsList(result.val);
+  };
+
+  useEffect(() => {
+    getFriends('');
   }, []);
 
   return (
@@ -32,6 +41,7 @@ export const FriendsList = () => {
               key={friend._id}
               lastName={friend.firstName}
               firstName={friend.lastName}
+              avatar={friend.avatar}
             />
           ))
         )}

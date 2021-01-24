@@ -9,6 +9,7 @@ import { config } from './config';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { AppGateway } from './app.gateway';
 import { DialogModule } from './modules/dialog/dialog.module';
+import { FriendsModule } from './modules/friends/friends.module';
 
 const { mongoUri } = config;
 
@@ -23,8 +24,10 @@ const { mongoUri } = config;
     MongooseModule.forRoot(mongoUri, {
       useNewUrlParser: true,
       useUnifiedTopology: true,
+      useCreateIndex: true,
     }),
     DialogModule,
+    FriendsModule,
   ],
   controllers: [],
   providers: [AppGateway],

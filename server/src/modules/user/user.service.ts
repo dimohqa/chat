@@ -60,26 +60,6 @@ export class UserService {
     });
   }
 
-  async getFriends(userId: string) {
-    const data = await this.friendsModel
-      .findOne(
-        {
-          userId: new Types.ObjectId(userId),
-        },
-        { friends: true },
-      )
-      .populate({
-        path: 'friends',
-        model: User.name,
-        select: {
-          firstName: true,
-          lastName: true,
-        },
-      });
-
-    return data.friends;
-  }
-
   async saveAvatarFilename(filename: string, userId: string) {
     return this.userModel.updateOne({ _id: userId }, { avatar: filename });
   }

@@ -9,7 +9,7 @@ export class FriendsController {
 
   @Get('search')
   @UseGuards(AuthGuard)
-  find(@UserId() userId: string, @Query('search') search: string) {
-    return this.friendsService.find(userId, search);
+  search(@UserId() userId: string, @Query('search') search: string) {
+    return this.friendsService.search(userId, search);
   }
 }

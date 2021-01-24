@@ -11,7 +11,7 @@ export class FriendsService {
     private readonly friendsModel: Model<FriendsDocument>,
   ) {}
 
-  async find(userId: string, search: string) {
+  async search(userId: string, search: string) {
     const data = await this.friendsModel
       .findOne(
         {

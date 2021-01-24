@@ -7,29 +7,32 @@ import {
 } from '../../schemas/refreshToken.schema';
 import { Model } from 'mongoose';
 import { sign, TokenExpiredError, verify } from 'jsonwebtoken';
-import { config } from '../../config';
 import { JwtToken } from '../../interfaces/jwtToken';
 import { UserService } from '../user/user.service';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { parse } from 'cookie';
-
-const { secretKey } = config;
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
+  secretKey: string;
+
   constructor(
     @InjectModel(RefreshToken.name)
-    private RefreshTokenModel: Model<RefreshTokenDocument>,
-    private UserService: UserService,
-  ) {}
+    private readonly refreshTokenModel: Model<RefreshTokenDocument>,
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
+  ) {
+    this.secretKey = this.configService.get<string>('SECRET');
+  }
 
   async checkCorrectPassword(password, requestPassword) {
     return compare(password, requestPassword);
   }
 
   generateRefreshToken(userId) {
-    return sign({ userId }, secretKey, {
+    return sign({ userId }, this.secretKey, {
       expiresIn: '30d',
     });
   }
@@ -37,7 +40,7 @@ export class AuthService {
   async createRefreshToken(id: string) {
     const token = this.generateRefreshToken(id);
 
-    await new this.RefreshTokenModel({
+    await new this.refreshTokenModel({
       user: id,
       token,
       created: new Date(),
@@ -56,17 +59,17 @@ export class AuthService {
   }
 
   async findRefreshToken(token: string) {
-    return this.RefreshTokenModel.findOne({ token });
+    return this.refreshTokenModel.findOne({ token });
   }
 
   async generateJwtToken(userId: string) {
-    return sign({ userId }, secretKey, {
+    return sign({ userId }, this.secretKey, {
       expiresIn: '1h',
     });
   }
 
   async deleteRefreshToken(user: string, token: string) {
-    await this.RefreshTokenModel.deleteOne({
+    await this.refreshTokenModel.deleteOne({
       user,
       token,
     });
@@ -88,11 +91,11 @@ export class AuthService {
     }
 
     const decodedRefreshToken = await (<JwtToken>(
-      verify(refreshToken, secretKey)
+      verify(refreshToken, this.secretKey)
     ));
 
     try {
-      await (<JwtToken>verify(token, secretKey));
+      await (<JwtToken>verify(token, this.secretKey));
     } catch (error) {
       if (error instanceof TokenExpiredError) {
         console.log('expired jwt token');
@@ -102,7 +105,7 @@ export class AuthService {
       }
     }
 
-    const user = await this.UserService.findOne({
+    const user = await this.userService.findOne({
       _id: decodedRefreshToken.userId,
     });
 

@@ -6,10 +6,10 @@ import { UserService } from './user.service';
 @Controller()
 @WebSocketGateway()
 export class UserGateway {
-  constructor(private UserService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   @SubscribeMessage('profile')
   async profile(client: Socket) {
-    return await this.UserService.findOne({ _id: client.request.userId });
+    return await this.userService.findOne({ _id: client.request.userId });
   }
 }

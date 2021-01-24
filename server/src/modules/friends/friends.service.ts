@@ -7,7 +7,8 @@ import { User } from '../../schemas/user.schema';
 @Injectable()
 export class FriendsService {
   constructor(
-    @InjectModel(Friends.name) private friendsModel: Model<FriendsDocument>,
+    @InjectModel(Friends.name)
+    private readonly friendsModel: Model<FriendsDocument>,
   ) {}
 
   async find(userId: string, search: string) {

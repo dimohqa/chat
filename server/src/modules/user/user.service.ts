@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { hash } from 'bcrypt';
 import { User, UserDocument } from '../../schemas/user.schema';
 import { Friends, FriendsDocument } from '../../schemas/friends.schema';
@@ -13,8 +13,9 @@ import { Friends, FriendsDocument } from '../../schemas/friends.schema';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectModel(User.name) private userModel: Model<UserDocument>,
-    @InjectModel(Friends.name) private friendsModel: Model<FriendsDocument>,
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    @InjectModel(Friends.name)
+    private readonly friendsModel: Model<FriendsDocument>,
   ) {}
 
   async create(user: User) {

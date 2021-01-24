@@ -22,14 +22,14 @@ const cookieOptions = {
 @Controller('auth')
 export class AuthController {
   constructor(
-    private UserService: UserService,
-    private AuthService: AuthService,
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
   ) {}
 
   @Public()
   @Post('/registration')
   async registration(@Body() user: User) {
-    await this.UserService.create(user);
+    await this.userService.create(user);
   }
 
   @Public()
@@ -40,13 +40,13 @@ export class AuthController {
     @Body('password') password: string,
     @Res({ passthrough: true }) response: Response,
   ) {
-    const user = await this.UserService.findUserByEmail(email);
+    const user = await this.userService.findUserByEmail(email);
 
     if (!user) {
       throw new ForbiddenException('User was not found');
     }
 
-    const passwordIsCorrect = await this.AuthService.checkCorrectPassword(
+    const passwordIsCorrect = await this.authService.checkCorrectPassword(
       password,
       user.password,
     );
@@ -55,9 +55,9 @@ export class AuthController {
       throw new ForbiddenException('Password is not correct');
     }
 
-    const token = await this.AuthService.generateJwtToken(user.id);
+    const token = await this.authService.generateJwtToken(user.id);
 
-    const refreshToken = await this.AuthService.createRefreshToken(user.id);
+    const refreshToken = await this.authService.createRefreshToken(user.id);
 
     response.cookie('token', token, cookieOptions);
 
@@ -72,7 +72,7 @@ export class AuthController {
     @Request() req: { userId: string },
     @Res() response: Response,
   ) {
-    const token = await this.AuthService.generateJwtToken(req.userId);
+    const token = await this.authService.generateJwtToken(req.userId);
 
     response.cookie('token', token, {
       httpOnly: true,

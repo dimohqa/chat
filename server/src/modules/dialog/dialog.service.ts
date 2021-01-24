@@ -6,7 +6,8 @@ import { Model } from 'mongoose';
 @Injectable()
 export class DialogService {
   constructor(
-    @InjectModel(Dialog.name) private dialogModel: Model<DialogDocument>,
+    @InjectModel(Dialog.name)
+    private readonly dialogModel: Model<DialogDocument>,
   ) {}
 
   async getDialogs(userId: string) {

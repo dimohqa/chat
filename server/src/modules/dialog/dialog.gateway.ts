@@ -4,10 +4,10 @@ import { DialogService } from './dialog.service';
 
 @WebSocketGateway()
 export class DialogGateway {
-  constructor(private DialogService: DialogService) {}
+  constructor(private readonly dialogService: DialogService) {}
 
   @SubscribeMessage('dialogs')
   getDialogs(client: Socket) {
-    return this.DialogService.getDialogs(client.request.userId);
+    return this.dialogService.getDialogs(client.request.userId);
   }
 }

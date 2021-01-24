@@ -14,16 +14,15 @@ import { UserId } from '../../helpers/user-id.decorator';
 import { AuthGuard } from '../../middlewares/auth.guard';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { User } from '../../schemas/user.schema';
 
 @Controller('user')
 export class UserController {
-  constructor(private UserService: UserService) {}
+  constructor(private readonly userService: UserService) {}
 
   @Get('/get')
   @UseGuards(AuthGuard)
   async get(@UserId() userId: string) {
-    return this.UserService.findOne({ _id: userId });
+    return this.userService.findOne({ _id: userId });
   }
 
   @Post('/uploadAvatar')
@@ -43,7 +42,7 @@ export class UserController {
     }),
   )
   async uploadAvatar(@UploadedFile() avatar, @UserId() userId: string) {
-    await this.UserService.saveAvatarFilename(avatar.filename, userId);
+    await this.userService.saveAvatarFilename(avatar.filename, userId);
     return {
       filename: avatar.filename,
     };
@@ -60,8 +59,6 @@ export class UserController {
     },
     @UserId() userId,
   ) {
-    return this.UserService.update(user, userId);
+    return this.userService.update(user, userId);
   }
-
-
 }

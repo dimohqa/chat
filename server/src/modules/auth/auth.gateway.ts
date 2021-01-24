@@ -4,11 +4,11 @@ import { Socket } from 'socket.io';
 
 @WebSocketGateway()
 export class AuthGateway {
-  constructor(private AuthService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @SubscribeMessage('logout')
   async logout(client: Socket) {
-    await this.AuthService.deleteRefreshToken(
+    await this.authService.deleteRefreshToken(
       client.request.userId,
       client.request.refreshToken,
     );

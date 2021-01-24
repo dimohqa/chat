@@ -5,13 +5,13 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
-import { config } from './config';
 import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { AppGateway } from './app.gateway';
 import { DialogModule } from './modules/dialog/dialog.module';
 import { FriendsModule } from './modules/friends/friends.module';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
-const { mongoUri } = config;
+const envFilePath = join('..', '.env.development');
 
 @Module({
   imports: [
@@ -19,13 +19,26 @@ const { mongoUri } = config;
       rootPath: join(__dirname, '..', '..', 'client', 'dist', 'client'),
       renderPath: '*',
     }),
+    ConfigModule.forRoot({
+      envFilePath: envFilePath,
+      isGlobal: true,
+    }),
+    MongooseModule.forRootAsync({
+      imports: [
+        ConfigModule.forRoot({
+          envFilePath: envFilePath,
+        }),
+      ],
+      inject: [ConfigService],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGO_URI'),
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+      }),
+    }),
     AuthModule,
     UserModule,
-    MongooseModule.forRoot(mongoUri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-      useCreateIndex: true,
-    }),
     DialogModule,
     FriendsModule,
   ],

@@ -2,16 +2,15 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { AuthService } from '../modules/auth/auth.service';
 import { JwtToken } from '../interfaces/jwtToken';
 import { verify } from 'jsonwebtoken';
-import { config } from '../config';
 import { UserService } from '../modules/user/user.service';
-
-const { secretKey } = config;
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
-    private AuthService: AuthService,
-    private UserService: UserService,
+    private readonly authService: AuthService,
+    private readonly userService: UserService,
+    private readonly configService: ConfigService,
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -23,7 +22,7 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    const foundedRefreshToken = await this.AuthService.findRefreshToken(
+    const foundedRefreshToken = await this.authService.findRefreshToken(
       refreshToken,
     );
 
@@ -31,13 +30,15 @@ export class AuthGuard implements CanActivate {
       return false;
     }
 
-    const decodedToken = await (<JwtToken>verify(refreshToken, secretKey));
+    const decodedToken = await (<JwtToken>(
+      verify(refreshToken, this.configService.get<string>('SECRET'))
+    ));
 
     if (!decodedToken) {
       return false;
     }
 
-    request.user = await this.UserService.getById(decodedToken.userId);
+    request.user = await this.userService.getById(decodedToken.userId);
 
     return true;
   }

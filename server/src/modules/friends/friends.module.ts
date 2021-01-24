@@ -14,10 +14,10 @@ import { User, UserSchema } from '../../schemas/user.schema';
 @Module({
   imports: [
     MongooseModule.forFeature([{ name: Friends.name, schema: FriendsSchema }]),
+    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forFeature([
       { name: RefreshToken.name, schema: RefreshTokenSchema },
     ]),
-    MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
   ],
   providers: [FriendsService, AuthService, UserService],
   controllers: [FriendsController],

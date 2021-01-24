@@ -64,25 +64,19 @@ const icon = {
 };
 
 export const NavSider = () => {
+  const [selectedItemMenu, setSelectedItemMenu] = useState<string>('');
+  const [
+    profileModalIsVisible,
+    setProfileModalVisibleStatus,
+  ] = useState<boolean>(false);
   const [userProfile, setUserProfile] = useState<User>({
     firstName: '',
     lastName: '',
     email: '',
     avatar: '',
   });
-  const [
-    profileModalIsVisible,
-    setProfileModalVisibleStatus,
-  ] = useState<boolean>(false);
 
   const history = useHistory();
-
-  const onLogoutHandler = async () => {
-    socket.emit('logout', () => {
-      socket.close();
-      window.location.href = '/login';
-    });
-  };
 
   const onOpenProfileModal = () => {
     setProfileModalVisibleStatus(true);
@@ -95,11 +89,22 @@ export const NavSider = () => {
     history.push(info.key.toString());
   };
 
+  const onLogoutHandler = async () => {
+    socket.emit('logout', () => {
+      socket.close();
+      window.location.href = '/login';
+    });
+  };
+
   useEffect(() => {
     socket.emit('profile', (profile: User) => {
       setUserProfile(profile);
     });
   }, []);
+
+  useEffect(() => {
+    setSelectedItemMenu(history.location.pathname.split('/')[1]);
+  }, [history.location.pathname]);
 
   return (
     <>
@@ -130,7 +135,7 @@ export const NavSider = () => {
         </StyledSkeleton>
         <StyledMenu
           theme="dark"
-          defaultSelectedKeys={[history.location.pathname.split('/')[1]]}
+          selectedKeys={[selectedItemMenu]}
           onSelect={onSelectItemMenu}
         >
           <Menu.Item key="chat" style={menuItem}>

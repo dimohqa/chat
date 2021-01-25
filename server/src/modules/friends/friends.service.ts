@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Friends, FriendsDocument } from '../../schemas/friends.schema';
 import { Model, Types } from 'mongoose';
@@ -38,5 +38,33 @@ export class FriendsService {
       });
 
     return data.friends;
+  }
+
+  async add(userId: string, friendId: string) {
+    try {
+      await this.friendsModel.updateOne(
+        { userId: Types.ObjectId(userId) },
+        { $push: { friends: Types.ObjectId(friendId) } },
+      );
+    } catch (error) {
+      throw new HttpException(
+        'Некорректный идентификатор пользователя',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+  }
+
+  async delete(userId: string, friendId: string) {
+    try {
+      await this.friendsModel.updateOne(
+        { userId: Types.ObjectId(userId) },
+        { $pull: { friends: Types.ObjectId(friendId) } },
+      );
+    } catch (error) {
+      throw new HttpException(
+        'Некорректный идентификатор пользователя',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
   }
 }

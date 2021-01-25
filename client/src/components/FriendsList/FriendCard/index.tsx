@@ -1,8 +1,9 @@
-import React, { useMemo } from 'react';
-import { Avatar, Card } from 'antd';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Avatar, Card, notification, Spin } from 'antd';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { UserDeleteOutlined, UserOutlined } from '@ant-design/icons';
+import { FriendsApi } from '@/api/friends';
 import { upperCaseFirstSymbol } from '../../../helpers/upperCaseFirstSymbol';
 
 const StyledCard = styled(Card)`
@@ -47,15 +48,14 @@ const DeleteButton = styled.div`
   display: flex;
   align-items: center;
   margin-right: 12px;
-
-  &:hover {
-    cursor: pointer;
-  }
 `;
 
 const StyledUserDeleteOutlined = styled(UserDeleteOutlined)`
+  font-size: 15px;
+
   &:hover {
     color: #d9472b;
+    cursor: pointer;
   }
 `;
 
@@ -67,9 +67,16 @@ type Props = {
   lastName: string;
   firstName: string;
   avatar: string;
+  id: string;
+  onDeleteFriendById: (friendId: string) => void;
 };
 
 export const FriendCard = (props: Props) => {
+  const [
+    deleteFriendIsFetching,
+    setDeleteFriendFetchingStatus,
+  ] = useState<boolean>(false);
+
   const fullName = useMemo(
     () =>
       `${upperCaseFirstSymbol(props.firstName)} ${upperCaseFirstSymbol(
@@ -77,6 +84,26 @@ export const FriendCard = (props: Props) => {
       )}`,
     [props.firstName, props.lastName],
   );
+
+  const onDelete = useCallback(async () => {
+    setDeleteFriendFetchingStatus(true);
+
+    const result = await FriendsApi.delete(props.id);
+
+    if (result.err) {
+      setDeleteFriendFetchingStatus(false);
+      notification.error({
+        message: 'Ошибка',
+        description: result.val,
+        duration: 3,
+      });
+
+      return;
+    }
+
+    setDeleteFriendFetchingStatus(false);
+    props.onDeleteFriendById(props.id);
+  }, [props.id]);
 
   return (
     <StyledCard>
@@ -92,7 +119,11 @@ export const FriendCard = (props: Props) => {
         </Content>
       </Body>
       <DeleteButton>
-        <StyledUserDeleteOutlined />
+        {deleteFriendIsFetching ? (
+          <Spin />
+        ) : (
+          <StyledUserDeleteOutlined onClick={onDelete} />
+        )}
       </DeleteButton>
     </StyledCard>
   );

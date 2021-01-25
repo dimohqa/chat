@@ -44,7 +44,7 @@ export class FriendsService {
     try {
       await this.friendsModel.updateOne(
         { userId: Types.ObjectId(userId) },
-        { $push: { friends: Types.ObjectId(friendId) } },
+        { $addToSet: { friends: Types.ObjectId(friendId) } },
       );
     } catch (error) {
       throw new HttpException(

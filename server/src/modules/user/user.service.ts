@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { hash } from 'bcrypt';
 import { User, UserDocument } from '../../schemas/user.schema';
 import { Friends, FriendsDocument } from '../../schemas/friends.schema';
@@ -17,6 +17,22 @@ export class UserService {
     @InjectModel(Friends.name)
     private readonly friendsModel: Model<FriendsDocument>,
   ) {}
+
+  async search(userId: string, search: string) {
+    return this.userModel.find(
+      {
+        $text: {
+          $search: search,
+        },
+      },
+      {
+        firstName: true,
+        lastName: true,
+        _id: true,
+        avatar: true,
+      },
+    );
+  }
 
   async create(user: User) {
     const hashedPassword = await hash(user.password, 12);

@@ -1,9 +1,9 @@
 import {
   Body,
   Controller,
-  Get,
+  Get, Param,
   Patch,
-  Post,
+  Post, Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -18,6 +18,12 @@ import { extname } from 'path';
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
+
+  @Get('search')
+  @UseGuards(AuthGuard)
+  async search(@UserId() userId: string, @Query('search') search: string) {
+    return this.userService.search(userId, search);
+  }
 
   @Get('/get')
   @UseGuards(AuthGuard)

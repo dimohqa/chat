@@ -3,7 +3,7 @@ import { Result } from '@/types/Result';
 import { Friend } from '@/types/Friend';
 import { Err, Ok } from 'ts-results';
 
-export const FriendsApi = {
+export const friendsApi = {
   async searchByQuery(searchValue: string): Promise<Result<Friend[]>> {
     try {
       const response = await http.get<Friend[]>(

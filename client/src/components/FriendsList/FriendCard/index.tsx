@@ -3,7 +3,7 @@ import { Avatar, Card, notification, Spin } from 'antd';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import { UserDeleteOutlined, UserOutlined } from '@ant-design/icons';
-import { FriendsApi } from '@/api/friends';
+import { friendsApi } from '@/api/friends';
 import { upperCaseFirstSymbol } from '../../../helpers/upperCaseFirstSymbol';
 
 const StyledCard = styled(Card)`
@@ -88,7 +88,7 @@ export const FriendCard = (props: Props) => {
   const onDelete = useCallback(async () => {
     setDeleteFriendFetchingStatus(true);
 
-    const result = await FriendsApi.delete(props.id);
+    const result = await friendsApi.delete(props.id);
 
     if (result.err) {
       setDeleteFriendFetchingStatus(false);

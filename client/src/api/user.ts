@@ -1,8 +1,10 @@
 import { Ok, Err } from 'ts-results';
 import { Result } from '@/types/Result';
+import { User } from '@/types/User';
 import { http } from './http';
 
 type UserApi = {
+  search(searchValue: string): Promise<Result<User[]>>;
   patch(newData: {
     firstName?: string;
     lastName?: string;
@@ -11,6 +13,18 @@ type UserApi = {
 };
 
 export const userApi: UserApi = {
+  async search(searchValue: string): Promise<Result<User[]>> {
+    try {
+      const response = await http.get<User[]>(
+        `/user/search?search=${searchValue}`,
+      );
+
+      return new Ok(response.data);
+    } catch (error) {
+      return new Err('error');
+    }
+  },
+
   async patch(
     newData,
   ): Promise<Result<{ firstName: string; lastName: string; email: string }>> {

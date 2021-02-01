@@ -7,6 +7,7 @@ import {
   CommentOutlined,
   LogoutOutlined,
   UserOutlined,
+  SearchOutlined,
 } from '@ant-design/icons';
 import { SelectInfo } from 'rc-menu/es/interface';
 import { ProfileModal } from '@/components/ProfileModal';
@@ -74,6 +75,7 @@ export const NavSider = () => {
     lastName: '',
     email: '',
     avatar: '',
+    _id: '',
   });
 
   const history = useHistory();
@@ -116,7 +118,7 @@ export const NavSider = () => {
           onChangeUserProfile={setUserProfile}
         />
       )}
-      <Sider width={80}>
+      <Sider width={80} style={{ backgroundColor: '#f3f4f6' }}>
         <StyledSkeleton
           active
           loading={userProfile === null}
@@ -134,7 +136,7 @@ export const NavSider = () => {
           )}
         </StyledSkeleton>
         <StyledMenu
-          theme="dark"
+          style={{ backgroundColor: '#f3f4f6' }}
           selectedKeys={[selectedItemMenu]}
           onSelect={onSelectItemMenu}
         >
@@ -148,6 +150,12 @@ export const NavSider = () => {
             <ContentItem>
               <TeamOutlined style={icon} />
               <ItemTitle>Друзья</ItemTitle>
+            </ContentItem>
+          </Menu.Item>
+          <Menu.Item key="search" style={menuItem}>
+            <ContentItem>
+              <SearchOutlined style={icon} />
+              <ItemTitle>Поиск</ItemTitle>
             </ContentItem>
           </Menu.Item>
           <Menu.Item

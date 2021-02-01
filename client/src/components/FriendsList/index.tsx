@@ -1,119 +1,73 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Layout } from 'antd';
-import { Header } from 'antd/es/layout/layout';
-import { Search } from '@/components/Search';
-import { Loader } from '@/components/Loader';
-import { FriendCard } from '@/components/FriendsList/FriendCard';
+import React, { useCallback, useState } from 'react';
 import { friendsApi } from '@/api/friends';
-import { User } from '@/types/User';
+import { Menu, notification, Spin } from 'antd';
 import { Friend } from '@/types/Friend';
-import { userApi } from '@/api/user';
-import { FoundUsersList } from '@/components/FriendsList/FoundUsersList';
-import styled from 'styled-components';
+import { Card } from '@/components/Card';
+import { LoadingOutlined } from '@ant-design/icons';
 
-const NotFound = styled.span`
-  display: flex;
-  justify-content: center;
-`;
+type Props = {
+  friends: Friend[];
+  onChangeFriends: (friends: Friend[]) => void;
+};
 
-export const FriendsList = () => {
-  const [friendsList, setFriendsList] = useState<Friend[]>([]);
-  const [usersList, setUserList] = useState<User[]>([]);
+export const FriendsList = (props: Props) => {
+  const [
+    deleteFriendIsLoading,
+    setDeleteFriendLoadingStatus,
+  ] = useState<boolean>(false);
 
-  const [friendsIsFetching, setFriendsFetchingStatus] = useState<boolean>(true);
-  const [usersIsFetching, setUsersFetchingStatus] = useState<boolean>(false);
+  const onDelete = useCallback(
+    async (id: string) => {
+      setDeleteFriendLoadingStatus(true);
 
-  const searchedUsersIsVisible = useMemo(() => usersList.length === 0, [
-    usersList,
-  ]);
-  const notFoundMessage = useMemo(() => {
-    if (
-      usersList.length === 0 &&
-      friendsList.length === 0 &&
-      !usersIsFetching &&
-      !friendsIsFetching
-    ) {
-      return <NotFound>К сожалению, ничего не найдено. =(</NotFound>;
-    }
+      const result = await friendsApi.delete(id);
 
-    return null;
-  }, [friendsIsFetching, friendsList, usersIsFetching, usersList]);
+      if (result.err) {
+        setDeleteFriendLoadingStatus(false);
+        notification.error({
+          message: 'Ошибка',
+          description: result.val,
+          duration: 3,
+        });
 
-  const onFilterFriendById = useCallback(
-    (friendId: string) =>
-      setFriendsList(friendsList.filter(friend => friend._id !== friendId)),
-    [friendsList],
-  );
+        return;
+      }
 
-  const onSearchUsers = useCallback(async (searchValue: string) => {
-    setUsersFetchingStatus(true);
-
-    const result = await userApi.search(searchValue);
-
-    if (result.err) {
-      setUsersFetchingStatus(false);
-
-      return;
-    }
-
-    setUserList(result.val);
-    setUsersFetchingStatus(false);
-  }, []);
-
-  const onSearchFriends = useCallback(async (searchValue: string) => {
-    setFriendsFetchingStatus(true);
-
-    const result = await friendsApi.searchByQuery(searchValue);
-
-    if (result.err) {
-      setFriendsFetchingStatus(false);
-      return;
-    }
-
-    setFriendsList(result.val);
-    setFriendsFetchingStatus(false);
-  }, []);
-
-  const onSearch = useCallback(
-    (searchValue: string) => {
-      onSearchFriends(searchValue);
-      onSearchUsers(searchValue);
+      setDeleteFriendLoadingStatus(false);
+      props.onChangeFriends(props.friends.filter(friend => friend._id !== id));
+      notification.success({
+        message: 'Успешно выполнено',
+        duration: 3,
+      });
     },
-    [onSearchFriends, onSearchUsers],
+    [props.friends],
   );
 
-  useEffect(() => {
-    onSearchFriends('');
-  }, []);
+  const menuPopover = (id: string) => (
+    <Menu>
+      <Menu.Item onClick={() => onDelete(id)} danger>
+        Удалить из друзей
+        {deleteFriendIsLoading && (
+          <Spin
+            style={{ marginLeft: '5px' }}
+            indicator={<LoadingOutlined spin />}
+          />
+        )}
+      </Menu.Item>
+    </Menu>
+  );
 
   return (
-    <Layout>
-      <Header style={{ backgroundColor: '#fff' }}>
-        <Search placeholder="Поиск друзей" callbackApi={onSearch} />
-      </Header>
-      <div style={{ backgroundColor: '#fff' }}>
-        {friendsIsFetching || usersIsFetching ? (
-          <Loader size="small" />
-        ) : (
-          <>
-            {friendsList.map((friend: Friend) => (
-              <FriendCard
-                key={friend._id}
-                id={friend._id}
-                lastName={friend.firstName}
-                firstName={friend.lastName}
-                avatar={friend.avatar}
-                onDeleteFriendById={onFilterFriendById}
-              />
-            ))}
-            <FoundUsersList
-              usersList={usersList}
-              visible={searchedUsersIsVisible}
-            />
-          </>
-        )}
-        {notFoundMessage}
-      </div>
-    </Layout>
+    <div>
+      {props.friends.map(friend => (
+        <Card
+          key={friend._id}
+          lastName={friend.lastName}
+          firstName={friend.firstName}
+          avatar={friend.avatar}
+          menu={() => menuPopover(friend._id)}
+        />
+      ))}
+    </div>
   );
 };

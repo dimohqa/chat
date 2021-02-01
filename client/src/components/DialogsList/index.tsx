@@ -6,5 +6,9 @@ export const DialogsList = () => {
     socket.emit('dialogs', () => {});
   }, []);
 
-  return <div>dialogs is coming...</div>;
+  return (
+    <div style={{ backgroundColor: '#f3f4f6', height: '100%' }}>
+      dialogs is coming...
+    </div>
+  );
 };

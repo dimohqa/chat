@@ -9,6 +9,7 @@ module.exports = {
   },
   output: {
     path: path.resolve(__dirname, 'dist', 'client'),
+    publicPath: '/',
     filename: '[name].[contenthash].bundle.js',
   },
   resolve: {

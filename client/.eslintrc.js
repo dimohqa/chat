@@ -10,6 +10,7 @@ module.exports = {
   extends: ['airbnb-typescript', 'prettier'],
   rules: {
     'prettier/prettier': ['error'],
+    'react/self-closing-comp': 'off',
     'react/jsx-curly-newline': 'off',
     'no-param-reassign': [
       2,

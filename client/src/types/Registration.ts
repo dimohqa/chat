@@ -3,6 +3,7 @@ import { Moment } from 'moment';
 export enum StepRegistration {
   ACCOUNT,
   PERSONAL_DATA,
+  PHOTO,
 }
 
 export type AccountForm = {

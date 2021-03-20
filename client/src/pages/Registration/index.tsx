@@ -1,7 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import moment from 'moment';
-import { Col, notification, Row, Steps, Typography, Spin } from 'antd';
-import { useHistory } from 'react-router';
+import { Col, notification, Row, Steps, Typography } from 'antd';
 import {
   AccountForm,
   PersonalDataForm,
@@ -13,9 +12,10 @@ import { setLoadingStatus } from '@/store/user';
 import { authApi } from '@/api/auth';
 import { Account } from './Account';
 import { PersonalData } from './PersonalData';
+import { Photo } from './Photo';
 
 export const Registration = () => {
-  const [currentStep, changeCurrentStep] = useState<number>(
+  const [currentStep, changeCurrentStep] = useState<StepRegistration>(
     StepRegistration.ACCOUNT,
   );
   const [accountForm, setAccountForm] = useState<AccountForm>({
@@ -30,7 +30,6 @@ export const Registration = () => {
     city: '',
   });
 
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const loading = useSelector((state: RootState) => state.user.isLoading);
@@ -65,38 +64,39 @@ export const Registration = () => {
     }
 
     dispatch(setLoadingStatus(false));
-    history.push('/login');
   }, [personalDataForm, accountForm]);
 
   return (
-    <Spin spinning={loading}>
-      <div>
-        <Steps type="navigation" current={currentStep}>
-          <Steps.Step title="Учетная запись" />
-          <Steps.Step title="Личные данные" />
-        </Steps>
-        <Row align="middle" style={{ margin: '50px 0 30px' }} justify="center">
-          <Typography.Title>{title}</Typography.Title>
-        </Row>
-        <Row align="top" style={{ height: '70%' }} justify="center">
-          <Col span={8}>
-            {currentStep === 0 ? (
-              <Account
-                form={accountForm}
-                setForm={setAccountForm}
-                onChangeCurrentStep={changeCurrentStep}
-              />
-            ) : (
-              <PersonalData
-                form={personalDataForm}
-                setForm={setPersonalDataForm}
-                onRegistration={onRegistrationHandle}
-                onChangeCurrentStep={changeCurrentStep}
-              />
-            )}
-          </Col>
-        </Row>
-      </div>
-    </Spin>
+    <div>
+      <Steps type="navigation" current={currentStep}>
+        <Steps.Step title="Учетная запись" />
+        <Steps.Step title="Личные данные" />
+        <Steps.Step title="Аватар" />
+      </Steps>
+      <Row align="middle" style={{ margin: '50px 0 30px' }} justify="center">
+        <Typography.Title>{title}</Typography.Title>
+      </Row>
+      <Row align="top" style={{ height: '70%' }} justify="center">
+        <Col span={12}>
+          {currentStep === StepRegistration.ACCOUNT && (
+            <Account
+              form={accountForm}
+              setForm={setAccountForm}
+              onChangeCurrentStep={changeCurrentStep}
+            />
+          )}
+          {currentStep === StepRegistration.PERSONAL_DATA && (
+            <PersonalData
+              form={personalDataForm}
+              registrationIsLoading={loading}
+              setForm={setPersonalDataForm}
+              onRegistration={onRegistrationHandle}
+              onChangeCurrentStep={changeCurrentStep}
+            />
+          )}
+          {currentStep === StepRegistration.PHOTO && <Photo />}
+        </Col>
+      </Row>
+    </div>
   );
 };

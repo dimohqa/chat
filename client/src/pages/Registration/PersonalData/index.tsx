@@ -7,6 +7,7 @@ import { FormItem } from '../FormItem';
 
 type Props = {
   form: PersonalDataForm | null;
+  registrationIsLoading: boolean;
   setForm: (form: PersonalDataForm) => void;
   onRegistration: () => void;
   onChangeCurrentStep: (step: number) => void;
@@ -21,17 +22,18 @@ export const PersonalData = (props: Props) => {
       age: form.getFieldValue('age'),
     });
   };
-  const onFinish = () => {
+  const onFinishHandler = () => {
     props.onRegistration();
+    props.onChangeCurrentStep(StepRegistration.PHOTO);
   };
-  const onBackButton = () => {
+  const onBackButtonHandler = () => {
     props.onChangeCurrentStep(StepRegistration.ACCOUNT);
   };
 
   return (
     <Form
       form={form}
-      onFinish={onFinish}
+      onFinish={onFinishHandler}
       requiredMark={false}
       layout="vertical"
       initialValues={{ ...props.form }}
@@ -52,10 +54,14 @@ export const PersonalData = (props: Props) => {
         <Input placeholder="Город" />
       </FormItem>
       <FormItem footer>
-        <Button type="default" onClick={onBackButton}>
+        <Button type="default" onClick={onBackButtonHandler}>
           Назад
         </Button>
-        <Button htmlType="submit" type="primary">
+        <Button
+          htmlType="submit"
+          type="primary"
+          loading={props.registrationIsLoading}
+        >
           Продолжить
         </Button>
       </FormItem>

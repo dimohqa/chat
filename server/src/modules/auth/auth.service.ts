@@ -13,6 +13,12 @@ import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { parse } from 'cookie';
 import { ConfigService } from '@nestjs/config';
+import { Response } from 'express';
+
+const cookieOptions = {
+  httpOnly: true,
+  maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
+};
 
 @Injectable()
 export class AuthService {
@@ -25,6 +31,16 @@ export class AuthService {
     private readonly configService: ConfigService,
   ) {
     this.secretKey = this.configService.get<string>('SECRET');
+  }
+
+  async authorizeUser(userId: string, response: Response) {
+    const token = await this.generateJwtToken(userId);
+
+    const refreshToken = await this.createRefreshToken(userId);
+
+    response.cookie('token', token, cookieOptions);
+
+    response.cookie('refreshToken', refreshToken, cookieOptions);
   }
 
   async checkCorrectPassword(password, requestPassword) {

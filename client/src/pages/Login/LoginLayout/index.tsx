@@ -58,7 +58,7 @@ export const LoginLayout: React.FC<Props> = (props: Props) => {
                   >
                     Войти
                   </Button>
-                  <Link to="/registration/account">Зарегистрироваться</Link>
+                  <Link to="/registration">Зарегистрироваться</Link>
                 </Row>
               </Form.Item>
             </Form>

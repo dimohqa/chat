@@ -14,11 +14,6 @@ import { Response } from 'express';
 import { User } from '../../schemas/user.schema';
 import { Public } from '../../helpers/public.decorator';
 
-const cookieOptions = {
-  httpOnly: true,
-  maxAge: 10 * 365 * 24 * 60 * 60 * 1000,
-};
-
 @Controller('auth')
 export class AuthController {
   constructor(
@@ -28,8 +23,15 @@ export class AuthController {
 
   @Public()
   @Post('/registration')
-  async registration(@Body() user: User) {
-    await this.userService.create(user);
+  async registration(
+    @Body() user: User,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const createdUserId = await this.userService.create(user);
+
+    await this.authService.authorizeUser(createdUserId, response);
+
+    return { userId: createdUserId };
   }
 
   @Public()
@@ -55,13 +57,7 @@ export class AuthController {
       throw new ForbiddenException('Password is not correct');
     }
 
-    const token = await this.authService.generateJwtToken(user.id);
-
-    const refreshToken = await this.authService.createRefreshToken(user.id);
-
-    response.cookie('token', token, cookieOptions);
-
-    response.cookie('refreshToken', refreshToken, cookieOptions);
+    await this.authService.authorizeUser(user.id, response);
 
     return { userId: user.id };
   }

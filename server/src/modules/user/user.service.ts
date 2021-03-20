@@ -34,7 +34,7 @@ export class UserService {
     );
   }
 
-  async create(user: User) {
+  async create(user: User): Promise<string> {
     const hashedPassword = await hash(user.password, 12);
 
     const userIsExist = await this.findUserByEmail(user.email);
@@ -52,6 +52,8 @@ export class UserService {
       userId: createdUser._id,
       friends: [],
     }).save();
+
+    return createdUser._id;
   }
 
   async findUserByEmail(email: string) {

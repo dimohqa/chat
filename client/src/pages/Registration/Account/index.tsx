@@ -20,10 +20,10 @@ type Props = {
 export const Account = (props: Props) => {
   const [form] = useForm();
 
-  const onChangeForm = () => {
+  const onChangeFormHandler = () => {
     props.setForm(form.getFieldsValue());
   };
-  const onFinish = () => {
+  const onFinishHandler = () => {
     props.onChangeCurrentStep(StepRegistration.PERSONAL_DATA);
   };
 
@@ -33,8 +33,8 @@ export const Account = (props: Props) => {
       requiredMark={false}
       form={form}
       initialValues={{ ...props.form }}
-      onFinish={onFinish}
-      onChange={onChangeForm}
+      onFinish={onFinishHandler}
+      onChange={onChangeFormHandler}
       validateMessages={validateMessages}
       size="large"
     >

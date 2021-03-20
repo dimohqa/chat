@@ -6,25 +6,25 @@ import {
   patternPasswordContainsOneDigit,
   patternPasswordContainsUpperCase,
 } from '@/constants/patterns';
-import { AccountForm } from '@/types/Registration';
+import { AccountForm, StepRegistration } from '@/types/Registration';
 import { validateMessages } from '@/constants/validateMessages';
-import { useHistory } from 'react-router';
+import { Link } from 'react-router-dom';
 import { FormItem } from '../FormItem';
 
 type Props = {
   form: AccountForm | null;
   setForm: (form: AccountForm) => void;
+  onChangeCurrentStep: (step: number) => void;
 };
 
 export const Account = (props: Props) => {
   const [form] = useForm();
 
-  const history = useHistory();
-
-  const onFinish = () => {
+  const onChangeForm = () => {
     props.setForm(form.getFieldsValue());
-
-    history.push('/registration/personalData');
+  };
+  const onFinish = () => {
+    props.onChangeCurrentStep(StepRegistration.PERSONAL_DATA);
   };
 
   return (
@@ -34,6 +34,7 @@ export const Account = (props: Props) => {
       form={form}
       initialValues={{ ...props.form }}
       onFinish={onFinish}
+      onChange={onChangeForm}
       validateMessages={validateMessages}
       size="large"
     >
@@ -83,12 +84,11 @@ export const Account = (props: Props) => {
       >
         <Input.Password placeholder="Повторите пароль" />
       </FormItem>
-      <FormItem>
-        <div className="account__footer footer-buttons">
-          <Button htmlType="submit" type="primary">
-            Продолжить
-          </Button>
-        </div>
+      <FormItem footer>
+        <Link to="/login">У вас уже есть аккаунт?</Link>
+        <Button htmlType="submit" type="primary">
+          Продолжить
+        </Button>
       </FormItem>
     </Form>
   );

@@ -25,5 +25,6 @@ module.exports = {
     'react-hooks/exhaustive-deps': 'warn',
     'react/jsx-wrap-multilines': 0,
     'no-underscore-dangle': 0,
+    '@typescript-eslint/indent': 'off',
   },
 };

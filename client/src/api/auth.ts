@@ -1,6 +1,10 @@
 import { Result } from '@/types/Result';
 import { http } from '@/api/http';
 import { Err, Ok } from 'ts-results';
+import {
+  AccountFormWithoutRepeatPassword,
+  PersonalDataForm,
+} from '@/types/Registration';
 
 // TODO: добавить корректные сообщения об ошибках
 
@@ -9,17 +13,9 @@ type AuthApi = {
     email: string,
     password: string,
   ) => Promise<Result<{ userId: string }>>;
-  registration: ({
-    firstName,
-    lastName,
-    email,
-    password,
-  }: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    password: string;
-  }) => Promise<Result<{}>>;
+  registration: (
+    userInfo: AccountFormWithoutRepeatPassword & PersonalDataForm,
+  ) => Promise<Result<{}>>;
   updateToken(): Promise<Result<boolean>>;
 };
 
@@ -49,18 +45,11 @@ export const authApi: AuthApi = {
     }
   },
 
-  async registration({
-    firstName,
-    lastName,
-    email,
-    password,
-  }): Promise<Result<{}>> {
+  async registration(userInfo): Promise<Result<{}>> {
     try {
       const response = await http.post<{}>('/auth/registration', {
-        firstName,
-        lastName,
-        email,
-        password,
+        ...userInfo,
+        age: userInfo.age.toDate(),
       });
 
       return new Ok(response.data);
@@ -75,7 +64,7 @@ export const authApi: AuthApi = {
             'Ошибка сервера. Попробуйте повторить запрос чуть позже.',
           );
         default:
-          return new Err('Default error');
+          return new Err(error.response.data?.message || 'Неизвестная ошибка');
       }
     }
   },

@@ -50,7 +50,9 @@ export class UserService {
       },
     ]);
 
-    return aggregatePaginationUsers[0];
+    return aggregatePaginationUsers.length === 1
+      ? aggregatePaginationUsers[0]
+      : { foundItems: [], totalCount: 0 };
   }
 
   async create(user: User): Promise<string> {

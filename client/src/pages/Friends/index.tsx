@@ -1,23 +1,30 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Layout } from 'antd';
+import { Layout, Spin } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import { SearchInput } from '@/components/SearchInput';
 import { FriendsList } from '@/components/FriendsList';
 import { friendsApi } from '@/api/friends';
 import { Friend } from '@/types/Friend';
 import styled from 'styled-components';
-import { Loader } from '@/components/Loader';
+
+import './Friends.css';
 
 const NotFound = styled.span`
   display: flex;
   justify-content: center;
+  margin: 20px 0 0;
 `;
 
 export const Friends = () => {
+  const [searchValue, setSearchValue] = useState<string>('');
   const [friends, setFriends] = useState<Friend[]>([]);
   const [friendsIsFetching, setFriendsFetchingStatus] = useState<boolean>(true);
+  const [friendsIsNotYet, setFriendsNotStatus] = useState<boolean>(false);
+  const [friendsIsNotFound, setFriendsNotFoundStatus] = useState<boolean>(
+    false,
+  );
 
-  const onSearchFriends = useCallback(async (searchValue: string) => {
+  const onSearchFriends = useCallback(async () => {
     setFriendsFetchingStatus(true);
 
     const result = await friendsApi.searchByQuery(searchValue);
@@ -28,29 +35,56 @@ export const Friends = () => {
       return;
     }
 
+    setFriendsNotFoundStatus(result.val.length === 0 && !friendsIsNotYet);
+
+    setFriends(result.val);
+    setFriendsFetchingStatus(false);
+  }, [searchValue]);
+
+  const getFriends = useCallback(async () => {
+    setFriendsFetchingStatus(true);
+    const result = await friendsApi.searchByQuery('');
+
+    if (result.err) {
+      setFriendsFetchingStatus(false);
+
+      return;
+    }
+
+    if (result.val.length === 0) {
+      setFriendsNotStatus(true);
+    }
+
     setFriends(result.val);
     setFriendsFetchingStatus(false);
   }, []);
 
   useEffect(() => {
-    onSearchFriends('');
+    getFriends();
   }, []);
 
   return (
     <Layout>
       <Header style={{ backgroundColor: '#f3f4f6' }}>
-        <SearchInput placeholder="Поиск друзей" callbackApi={onSearchFriends} />
+        <SearchInput
+          searchValue={searchValue}
+          placeholder="Поиск друзей"
+          callbackApi={onSearchFriends}
+          onChangeSearchValue={setSearchValue}
+        />
       </Header>
-      <div>
-        {friendsIsFetching ? (
-          <Loader size="small" />
-        ) : (
-          <FriendsList friends={friends} onChangeFriends={setFriends} />
+      <Spin
+        spinning={friendsIsFetching}
+        wrapperClassName="friends__spin-wrapper"
+      >
+        <FriendsList friends={friends} onChangeFriends={setFriends} />
+        {friendsIsNotFound && !friendsIsFetching && (
+          <NotFound>К сожалению, ничего не найдено</NotFound>
         )}
-        {friends.length === 0 && !friendsIsFetching && (
-          <NotFound>К сожалению, ничего не найдено.</NotFound>
+        {friendsIsNotYet && !friendsIsFetching && (
+          <NotFound>К сожалению, у вас пока нет друзей</NotFound>
         )}
-      </div>
+      </Spin>
     </Layout>
   );
 };

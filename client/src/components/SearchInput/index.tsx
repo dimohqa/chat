@@ -16,7 +16,7 @@ type Props = {
   searchValue: string;
   placeholder: string;
   onChangeSearchValue: (searchValue: string) => void;
-  callbackApi: (skip?: number) => void;
+  callbackApi: () => void;
 };
 
 export const SearchInput = (props: Props) => {
@@ -29,7 +29,7 @@ export const SearchInput = (props: Props) => {
     if (searchStatus) {
       props.callbackApi();
     }
-  }, [debounceSearchValue, props.callbackApi, searchStatus]);
+  }, [debounceSearchValue, searchStatus]);
 
   return (
     <AutoComplete

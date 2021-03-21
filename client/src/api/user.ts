@@ -1,10 +1,15 @@
 import { Ok, Err } from 'ts-results';
 import { Result } from '@/types/Result';
 import { User } from '@/types/User';
+import { Pagination } from '@/types/Pagination';
 import { http } from './http';
 
 type UserApi = {
-  search(searchValue: string): Promise<Result<User[]>>;
+  search(
+    search: string,
+    skip?: number,
+    take?: number,
+  ): Promise<Result<Pagination<User>>>;
   patch(newData: {
     firstName?: string;
     lastName?: string;
@@ -13,11 +18,16 @@ type UserApi = {
 };
 
 export const userApi: UserApi = {
-  async search(searchValue: string): Promise<Result<User[]>> {
+  async search(search, skip?, take = 10) {
+    const params = {
+      search,
+      skip,
+      take,
+    };
     try {
-      const response = await http.get<User[]>(
-        `/user/search?search=${searchValue}`,
-      );
+      const response = await http.get<Pagination<User>>('/user/search', {
+        params,
+      });
 
       return new Ok(response.data);
     } catch (error) {
@@ -25,9 +35,7 @@ export const userApi: UserApi = {
     }
   },
 
-  async patch(
-    newData,
-  ): Promise<Result<{ firstName: string; lastName: string; email: string }>> {
+  async patch(newData) {
     try {
       const response = await http.patch<{
         firstName: string;

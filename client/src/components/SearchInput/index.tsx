@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { AutoComplete, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
@@ -13,23 +13,30 @@ const Search = styled(Input)`
 `;
 
 type Props = {
+  searchValue: string;
   placeholder: string;
-  callbackApi: (searchValue: string) => void;
+  onChangeSearchValue: (searchValue: string) => void;
+  callbackApi: (skip?: number) => void;
 };
 
 export const SearchInput = (props: Props) => {
-  const [value, setValue] = useState<string>('');
-
-  const { debounceSearchValue, searchStatus } = useDebounce(value, 500);
+  const { debounceSearchValue, searchStatus } = useDebounce(
+    props.searchValue,
+    500,
+  );
 
   useEffect(() => {
     if (searchStatus) {
-      props.callbackApi(debounceSearchValue);
+      props.callbackApi();
     }
   }, [debounceSearchValue, props.callbackApi, searchStatus]);
 
   return (
-    <AutoComplete value={value} onChange={setValue} style={{ width: '100%' }}>
+    <AutoComplete
+      value={props.searchValue}
+      onChange={props.onChangeSearchValue}
+      style={{ width: '100%' }}
+    >
       <Search
         placeholder={props.placeholder}
         prefix={<SearchOutlined style={{ color: '#1890ff' }} />}

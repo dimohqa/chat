@@ -1,9 +1,12 @@
 import {
   Body,
   Controller,
-  Get, Param,
+  DefaultValuePipe,
+  Get,
+  Param, ParseIntPipe,
   Patch,
-  Post, Query,
+  Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -19,10 +22,15 @@ import { extname } from 'path';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get('search')
+  @Get('/search')
   @UseGuards(AuthGuard)
-  async search(@UserId() userId: string, @Query('search') search: string) {
-    return this.userService.search(userId, search);
+  async search(
+    @UserId() userId: string,
+    @Query('search') search: string,
+    @Query('skip', new DefaultValuePipe(0), new ParseIntPipe()) skip: number,
+    @Query('take', new DefaultValuePipe(10), new ParseIntPipe()) take: number,
+  ) {
+    return this.userService.search(userId, search, skip, take);
   }
 
   @Get('/get')

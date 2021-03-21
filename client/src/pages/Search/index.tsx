@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Layout, Menu, notification } from 'antd';
+import { Button, Layout, Menu, notification } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import { SearchInput } from '@/components/SearchInput';
 import { User } from '@/types/User';
@@ -14,29 +14,43 @@ const NotFound = styled.span`
   justify-content: center;
 `;
 
+const FriendsListContainer = styled.div`
+  height: 100vh;
+  overflow: auto;
+`;
+
 export const Search = () => {
+  const [searchValue, setSearchValue] = useState<string>('');
   const [usersList, setUserList] = useState<User[]>([]);
   const [usersIsFetching, setUsersFetchingStatus] = useState<boolean>(false);
   const [usersNotFound, setUsersNotFoundStatus] = useState<boolean>(false);
+  const [usersIsStayed, setUsersStayedStatus] = useState<boolean>(false);
 
-  const onSearchUsers = useCallback(async (searchValue: string) => {
-    setUsersFetchingStatus(true);
+  const onSearchUsers = useCallback(
+    async (skip?: number) => {
+      setUsersFetchingStatus(true);
 
-    const result = await userApi.search(searchValue);
+      const result = await userApi.search(searchValue, skip);
 
-    if (result.err) {
+      if (result.err) {
+        setUsersFetchingStatus(false);
+
+        return;
+      }
+
+      if (result.val.foundItems.length === 0 && searchValue !== '') {
+        setUsersNotFoundStatus(true);
+      }
+
+      if (result.val.foundItems.length < result.val.totalCount) {
+        setUsersStayedStatus(true);
+      }
+
+      setUserList(result.val.foundItems);
       setUsersFetchingStatus(false);
-
-      return;
-    }
-
-    if (result.val.length === 0 && searchValue !== '') {
-      setUsersNotFoundStatus(true);
-    }
-
-    setUserList(result.val);
-    setUsersFetchingStatus(false);
-  }, []);
+    },
+    [searchValue],
+  );
 
   const addFriend = async (id: string) => {
     const result = await friendsApi.add(id);
@@ -64,28 +78,37 @@ export const Search = () => {
   );
 
   return (
-    <Layout>
+    <Layout style={{ height: '100vh' }}>
       <Header style={{ backgroundColor: '#f3f4f6' }}>
         <SearchInput
+          searchValue={searchValue}
+          onChangeSearchValue={setSearchValue}
           placeholder="Поиск пользователей"
           callbackApi={onSearchUsers}
         />
       </Header>
-      {usersIsFetching ? (
-        <Loader size="default" />
-      ) : (
-        usersList.map(user => (
-          <Card
-            lastName={user.lastName}
-            firstName={user.firstName}
-            avatar={user.avatar}
-            menu={() => dropdownMenu(user._id)}
-          />
-        ))
-      )}
-      {usersNotFound && (
-        <NotFound>К сожалению, таких пользователей не найдено.</NotFound>
-      )}
+      <FriendsListContainer>
+        {usersIsFetching ? (
+          <Loader size="default" />
+        ) : (
+          usersList.map(user => (
+            <Card
+              lastName={user.lastName}
+              firstName={user.firstName}
+              avatar={user.avatar}
+              menu={() => dropdownMenu(user._id)}
+            />
+          ))
+        )}
+        {usersIsStayed && (
+          <Button onClick={() => onSearchUsers(usersList.length)} type="link">
+            Загрузить еще
+          </Button>
+        )}
+        {usersNotFound && (
+          <NotFound>К сожалению, таких пользователей не найдено.</NotFound>
+        )}
+      </FriendsListContainer>
     </Layout>
   );
 };

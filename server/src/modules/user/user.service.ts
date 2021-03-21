@@ -5,7 +5,7 @@ import {
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model, Types } from 'mongoose';
+import { Model } from 'mongoose';
 import { hash } from 'bcrypt';
 import { User, UserDocument } from '../../schemas/user.schema';
 import { Friends, FriendsDocument } from '../../schemas/friends.schema';
@@ -18,20 +18,39 @@ export class UserService {
     private readonly friendsModel: Model<FriendsDocument>,
   ) {}
 
-  async search(userId: string, search: string) {
-    return this.userModel.find(
+  async search(userId: string, search: string, skip: number, take: number) {
+    const aggregatePaginationUsers = await this.userModel.aggregate([
+      { $match: { $text: { $search: search } } },
+      { $addFields: { score: { $meta: 'textScore' } } },
       {
-        $text: {
-          $search: search,
+        $facet: {
+          totalCount: [{ $count: 'totalCount' }],
+          foundItems: [
+            { $skip: skip },
+            { $limit: take },
+            {
+              $project: {
+                firstName: true,
+                lastName: true,
+                _id: true,
+                avatar: true,
+              },
+            },
+          ],
         },
       },
       {
-        firstName: true,
-        lastName: true,
-        _id: true,
-        avatar: true,
+        $project: {
+          foundItems: '$foundItems',
+          totalCount: '$totalCount.totalCount',
+        },
       },
-    );
+      {
+        $unwind: '$totalCount',
+      },
+    ]);
+
+    return aggregatePaginationUsers[0];
   }
 
   async create(user: User): Promise<string> {

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { AutoComplete, Input } from 'antd';
 import { SearchOutlined } from '@ant-design/icons';
 import styled from 'styled-components';
-import { useDebounce } from '../../hooks/useDebounce';
+import { useDebounce } from '../../../../hooks/useDebounce';
 
 const Search = styled(Input)`
   background-color: #f3f4f6;

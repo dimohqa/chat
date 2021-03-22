@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from 'react';
 import { Button, Layout, Menu, notification, Spin } from 'antd';
 import { Header } from 'antd/es/layout/layout';
-import { SearchInput } from '@/components/SearchInput';
 import { User } from '@/types/User';
 import { userApi } from '@/api/user';
-import { Card } from '@/components/Card';
 import { friendsApi } from '@/api/friends';
 import styled from 'styled-components';
+import { Card } from '../../components/Card';
+import { SearchInput } from '../../components/SearchInput';
 
 const NotFound = styled.span`
   display: flex;

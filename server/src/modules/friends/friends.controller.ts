@@ -1,7 +1,10 @@
 import {
+  BadRequestException,
   Body,
   Controller,
   Get,
+  HttpException,
+  HttpStatus,
   Param,
   Patch,
   Query,
@@ -10,6 +13,7 @@ import {
 import { FriendsService } from './friends.service';
 import { UserId } from '../../helpers/user-id.decorator';
 import { AuthGuard } from '../../middlewares/auth.guard';
+import user from '../../../../client/src/store/user';
 
 @Controller('friends')
 export class FriendsController {
@@ -24,6 +28,12 @@ export class FriendsController {
   @Patch('add/:id')
   @UseGuards(AuthGuard)
   async add(@UserId() userId: string, @Param('id') id: string) {
+    if (userId === id) {
+      throw new BadRequestException(
+        HttpStatus.BAD_REQUEST,
+        'Вы не можете добавить в друзья самого себя',
+      );
+    }
     await this.friendsService.add(userId, id);
   }
 

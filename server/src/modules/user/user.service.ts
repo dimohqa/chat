@@ -20,7 +20,7 @@ export class UserService {
 
   async search(userId: string, search: string, skip: number, take: number) {
     const aggregatePaginationUsers = await this.userModel.aggregate([
-      { $match: { $text: { $search: search } } },
+      { $match: { $text: { $search: search }, _id: { $ne: userId } } },
       { $addFields: { score: { $meta: 'textScore' } } },
       {
         $facet: {

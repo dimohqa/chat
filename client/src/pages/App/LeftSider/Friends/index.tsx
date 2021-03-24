@@ -5,7 +5,7 @@ import { friendsApi } from '@/api/friends';
 import styled from 'styled-components';
 import { Friend } from '@/types/Friend';
 import { SearchInput } from '../../components/SearchInput';
-import { FriendsList } from '../../FriendsList';
+import { FriendsList } from './FriendsList';
 
 import './Friends.css';
 

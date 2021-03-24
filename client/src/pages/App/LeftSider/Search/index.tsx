@@ -4,7 +4,7 @@ import { Header } from 'antd/es/layout/layout';
 import { SearchUser } from '@/types/User';
 import { userApi } from '@/api/user';
 import styled from 'styled-components';
-import { Card } from '../../components/Card';
+import { UserCard } from '../../components/UserCard';
 import { SearchInput } from '../../components/SearchInput';
 
 const NotFound = styled.span`
@@ -102,7 +102,7 @@ export const Search = () => {
       <FriendsListContainer>
         <Spin spinning={usersIsFetching}>
           {usersList.map(user => (
-            <Card
+            <UserCard
               key={user._id}
               id={user._id}
               lastName={user.lastName}

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Friend } from '@/types/Friend';
-import { Card } from '../components/Card';
+import { UserCard } from '../../../components/UserCard';
 
 type Props = {
   friends: Friend[];
@@ -15,7 +15,7 @@ export const FriendsList = (props: Props) => {
   return (
     <div>
       {props.friends.map(friend => (
-        <Card
+        <UserCard
           key={friend._id}
           id={friend._id}
           lastName={friend.lastName}

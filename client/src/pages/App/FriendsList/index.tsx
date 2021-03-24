@@ -1,8 +1,5 @@
-import React, { useCallback, useState } from 'react';
-import { friendsApi } from '@/api/friends';
-import { Menu, notification, Spin } from 'antd';
+import React from 'react';
 import { Friend } from '@/types/Friend';
-import { LoadingOutlined } from '@ant-design/icons';
 import { Card } from '../components/Card';
 
 type Props = {
@@ -11,61 +8,21 @@ type Props = {
 };
 
 export const FriendsList = (props: Props) => {
-  const [
-    deleteFriendIsLoading,
-    setDeleteFriendLoadingStatus,
-  ] = useState<boolean>(false);
-
-  const onDelete = useCallback(
-    async (id: string) => {
-      setDeleteFriendLoadingStatus(true);
-
-      const result = await friendsApi.delete(id);
-
-      if (result.err) {
-        setDeleteFriendLoadingStatus(false);
-        notification.error({
-          message: 'Ошибка',
-          description: result.val,
-          duration: 3,
-        });
-
-        return;
-      }
-
-      setDeleteFriendLoadingStatus(false);
-      props.onChangeFriends(props.friends.filter(friend => friend._id !== id));
-      notification.success({
-        message: 'Успешно выполнено',
-        duration: 3,
-      });
-    },
-    [props.friends],
-  );
-
-  const menuPopover = (id: string) => (
-    <Menu>
-      <Menu.Item onClick={() => onDelete(id)} danger>
-        Удалить из друзей
-        {deleteFriendIsLoading && (
-          <Spin
-            style={{ marginLeft: '5px' }}
-            indicator={<LoadingOutlined spin />}
-          />
-        )}
-      </Menu.Item>
-    </Menu>
-  );
+  const changeFriendsList = (id: string) => {
+    props.onChangeFriends(props.friends.filter(friend => friend._id !== id));
+  };
 
   return (
     <div>
       {props.friends.map(friend => (
         <Card
           key={friend._id}
+          id={friend._id}
           lastName={friend.lastName}
           firstName={friend.firstName}
           avatar={friend.avatar}
-          menu={() => menuPopover(friend._id)}
+          changeFriendStatus={changeFriendsList}
+          isFriend
         />
       ))}
     </div>

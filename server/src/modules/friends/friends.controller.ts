@@ -13,7 +13,6 @@ import {
 import { FriendsService } from './friends.service';
 import { UserId } from '../../helpers/user-id.decorator';
 import { AuthGuard } from '../../middlewares/auth.guard';
-import user from '../../../../client/src/store/user';
 
 @Controller('friends')
 export class FriendsController {

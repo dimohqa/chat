@@ -1,7 +1,12 @@
-import React, { useMemo } from 'react';
-import { Avatar, Dropdown, Card as AntdCard } from 'antd';
+import React, { useCallback, useMemo } from 'react';
+import { Avatar, Card as AntdCard, notification } from 'antd';
 import styled from 'styled-components';
-import { EllipsisOutlined, UserOutlined } from '@ant-design/icons';
+import {
+  UserAddOutlined,
+  UserDeleteOutlined,
+  UserOutlined,
+} from '@ant-design/icons';
+import { friendsApi } from '@/api/friends';
 import { upperCaseFirstSymbol } from '../../../../helpers/upperCaseFirstSymbol';
 
 const StyledCard = styled(AntdCard)`
@@ -25,12 +30,17 @@ const StyledCard = styled(AntdCard)`
     background-color: #f0f0f0;
     cursor: pointer;
   }
+
+  &:hover .icons-wrapper {
+    visibility: visible;
+  }
 `;
 
-const DropdownWrapper = styled.div`
+const IconsWrapper = styled.div`
   margin-left: auto;
   display: flex;
   align-items: center;
+  visibility: hidden;
 `;
 
 const Content = styled.div`
@@ -50,11 +60,23 @@ const Body = styled.div`
   display: flex;
 `;
 
+const UserDeleteIcon = styled(UserDeleteOutlined)`
+  font-size: 16px;
+  color: red;
+`;
+
+const UserAddIcon = styled(UserAddOutlined)`
+  font-size: 16px;
+  color: green;
+`;
+
 type Props = {
   lastName: string;
   firstName: string;
   avatar: string;
-  menu: () => React.ReactElement;
+  id: string;
+  isFriend: boolean;
+  changeFriendStatus: (id: string, isFriend?: boolean) => void;
 };
 
 export const Card = (props: Props) => {
@@ -65,6 +87,47 @@ export const Card = (props: Props) => {
       )}`,
     [props.firstName, props.lastName],
   );
+
+  const addFriend = useCallback(async () => {
+    const result = await friendsApi.add(props.id);
+
+    if (result.err) {
+      notification.error({
+        message: 'Ошибка',
+        description: result.val,
+        duration: 3,
+      });
+
+      return;
+    }
+
+    props.changeFriendStatus(props.id, true);
+
+    notification.success({
+      message: `${fullName} добавлен в друзья`,
+      duration: 3,
+    });
+  }, [props.id, props.changeFriendStatus, fullName]);
+  const deleteFriend = useCallback(async () => {
+    const result = await friendsApi.delete(props.id);
+
+    if (result.err) {
+      notification.error({
+        message: 'Ошибка',
+        description: result.val,
+        duration: 3,
+      });
+
+      return;
+    }
+
+    props.changeFriendStatus(props.id, false);
+
+    notification.warning({
+      message: `${fullName} удален из друзей`,
+      duration: 3,
+    });
+  }, [props.id, props.changeFriendStatus, fullName]);
 
   return (
     <StyledCard>
@@ -78,11 +141,13 @@ export const Card = (props: Props) => {
           <Title>{fullName}</Title>
           <span>Новосибирск, 21 год</span>
         </Content>
-        <DropdownWrapper>
-          <Dropdown overlay={props.menu} placement="bottomCenter">
-            <EllipsisOutlined style={{ fontSize: '20px' }} />
-          </Dropdown>
-        </DropdownWrapper>
+        <IconsWrapper className="icons-wrapper">
+          {props.isFriend ? (
+            <UserDeleteIcon onClick={deleteFriend} />
+          ) : (
+            <UserAddIcon onClick={addFriend} />
+          )}
+        </IconsWrapper>
       </Body>
     </StyledCard>
   );

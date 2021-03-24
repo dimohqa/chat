@@ -5,3 +5,5 @@ export type User = {
   email: string;
   _id: string;
 };
+
+export type SearchUser = User & { isFriend: boolean };

@@ -3,9 +3,7 @@ import { Layout, Spin } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import { friendsApi } from '@/api/friends';
 import styled from 'styled-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { setFriends } from '@/store/friends';
-import { RootState } from '@/store/rootReducer';
+import { Friend } from '@/types/Friend';
 import { SearchInput } from '../../components/SearchInput';
 import { FriendsList } from '../../FriendsList';
 
@@ -19,14 +17,12 @@ const NotFound = styled.span`
 
 export const Friends = () => {
   const [searchValue, setSearchValue] = useState<string>('');
+  const [friends, setFriends] = useState<Friend[]>([]);
   const [
     searchFriendsIsFetching,
     setSearchFriendsFetchingStatus,
   ] = useState<boolean>(false);
 
-  const { friends, friendsIsFetching } = useSelector(
-    (state: RootState) => state.friends,
-  );
   const friendsIsNotFound = useMemo(
     () => searchValue.length !== 0 && friends.length === 0,
     [friends.length, searchValue.length],
@@ -35,8 +31,6 @@ export const Friends = () => {
     () => searchValue.length === 0 && friends.length === 0,
     [friends.length, searchValue.length],
   );
-
-  const dispatch = useDispatch();
 
   const onSearchFriends = useCallback(async () => {
     setSearchFriendsFetchingStatus(true);
@@ -49,7 +43,7 @@ export const Friends = () => {
       return;
     }
 
-    dispatch(setFriends(result.val));
+    setFriends(result.val);
     setSearchFriendsFetchingStatus(false);
   }, [searchValue]);
 
@@ -68,14 +62,14 @@ export const Friends = () => {
         />
       </Header>
       <Spin
-        spinning={friendsIsFetching || searchFriendsIsFetching}
+        spinning={searchFriendsIsFetching}
         wrapperClassName="friends__spin-wrapper"
       >
         <FriendsList friends={friends} onChangeFriends={setFriends} />
-        {friendsIsNotFound && !friendsIsFetching && (
+        {friendsIsNotFound && !searchFriendsIsFetching && (
           <NotFound>К сожалению, ничего не найдено</NotFound>
         )}
-        {friendsIsNotYet && !friendsIsFetching && (
+        {friendsIsNotYet && !searchFriendsIsFetching && (
           <NotFound>К сожалению, у вас пока нет друзей</NotFound>
         )}
       </Spin>

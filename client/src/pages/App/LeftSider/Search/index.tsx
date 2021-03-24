@@ -1,9 +1,8 @@
 import React, { useCallback, useState } from 'react';
-import { Button, Layout, Menu, notification, Spin } from 'antd';
+import { Button, Layout, Spin } from 'antd';
 import { Header } from 'antd/es/layout/layout';
-import { User } from '@/types/User';
+import { SearchUser } from '@/types/User';
 import { userApi } from '@/api/user';
-import { friendsApi } from '@/api/friends';
 import styled from 'styled-components';
 import { Card } from '../../components/Card';
 import { SearchInput } from '../../components/SearchInput';
@@ -30,7 +29,7 @@ const UploadMoreButton = styled(Button)`
 
 export const Search = () => {
   const [searchValue, setSearchValue] = useState<string>('');
-  const [usersList, setUserList] = useState<User[]>([]);
+  const [usersList, setUserList] = useState<SearchUser[]>([]);
   const [usersIsFetching, setUsersFetchingStatus] = useState<boolean>(false);
   const [
     usersPaginationIsFetching,
@@ -78,29 +77,16 @@ export const Search = () => {
     setUsersPaginationFetchingStatus(false);
   }, [searchValue, usersList]);
 
-  const addFriend = async (id: string) => {
-    const result = await friendsApi.add(id);
-
-    if (result.err) {
-      notification.error({
-        message: 'Ошибка',
-        description: result.val,
-        duration: 3,
-      });
-
-      return;
-    }
-
-    notification.success({
-      message: 'Успешно выполнено',
-      duration: 3,
-    });
-  };
-
-  const dropdownMenu = (id: string) => (
-    <Menu>
-      <Menu.Item onClick={() => addFriend(id)}>Добавить в друзья</Menu.Item>
-    </Menu>
+  const changeFriendStatus = useCallback(
+    (id: string, isFriend: boolean) => {
+      setUserList(
+        usersList.map(user => ({
+          ...user,
+          isFriend: user._id === id ? isFriend : user.isFriend,
+        })),
+      );
+    },
+    [usersList],
   );
 
   return (
@@ -118,10 +104,12 @@ export const Search = () => {
           {usersList.map(user => (
             <Card
               key={user._id}
+              id={user._id}
               lastName={user.lastName}
               firstName={user.firstName}
               avatar={user.avatar}
-              menu={() => dropdownMenu(user._id)}
+              isFriend={user.isFriend}
+              changeFriendStatus={changeFriendStatus}
             />
           ))}
           <UploadMoreContainer>

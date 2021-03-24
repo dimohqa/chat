@@ -1,6 +1,6 @@
 import { Ok, Err } from 'ts-results';
 import { Result } from '@/types/Result';
-import { User } from '@/types/User';
+import { SearchUser } from '@/types/User';
 import { Pagination } from '@/types/Pagination';
 import { http } from './http';
 
@@ -9,7 +9,7 @@ type UserApi = {
     search: string,
     skip?: number,
     take?: number,
-  ): Promise<Result<Pagination<User>>>;
+  ): Promise<Result<Pagination<SearchUser>>>;
   patch(newData: {
     firstName?: string;
     lastName?: string;
@@ -25,7 +25,7 @@ export const userApi: UserApi = {
       take,
     };
     try {
-      const response = await http.get<Pagination<User>>('/user/search', {
+      const response = await http.get<Pagination<SearchUser>>('/user/search', {
         params,
       });
 

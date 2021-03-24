@@ -50,9 +50,28 @@ export class UserService {
       },
     ]);
 
-    return aggregatePaginationUsers.length === 1
-      ? aggregatePaginationUsers[0]
-      : { foundItems: [], totalCount: 0 };
+    if (!aggregatePaginationUsers.length) {
+      return { foundItems: [], totalCount: 0 };
+    }
+
+    const friends = await this.friendsModel.findOne(
+      { userId },
+      { friends: true },
+    );
+
+    const newFoundItemsWithFriendStatus = aggregatePaginationUsers[0].foundItems.map(
+      (user) => {
+        return {
+          ...user,
+          isFriend: friends.friends.includes(user._id),
+        };
+      },
+    );
+
+    return {
+      foundItems: newFoundItemsWithFriendStatus,
+      totalCount: aggregatePaginationUsers[0].totalCount,
+    };
   }
 
   async create(user: User): Promise<string> {

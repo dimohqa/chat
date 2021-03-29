@@ -26,5 +26,6 @@ module.exports = {
     'react/jsx-wrap-multilines': 0,
     'no-underscore-dangle': 0,
     '@typescript-eslint/indent': 'off',
+    'react/require-default-props': 'off',
   },
 };

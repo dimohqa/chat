@@ -8,9 +8,15 @@ import { Search } from './Search';
 export const LeftSider = () => (
   <Sider width="30%" theme="light" style={{ backgroundColor: '#f3f4f6' }}>
     <Switch>
-      <Route exact path="/chat" component={DialogsList} />
-      <Route exact path="/friends" component={Friends} />
-      <Route exact path="/search" component={Search} />
+      <Route exact path="/chat/:id?">
+        <DialogsList />
+      </Route>
+      <Route exact path="/friends/:id?">
+        <Friends />
+      </Route>
+      <Route exact path="/search/:id?">
+        <Search />
+      </Route>
       <Redirect to="/chat" />
     </Switch>
   </Sider>

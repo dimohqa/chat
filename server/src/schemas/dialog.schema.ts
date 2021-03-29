@@ -10,11 +10,11 @@ export class Dialog {
   @Prop({ type: [Types.ObjectId], ref: Message.name })
   messages: Message[];
 
-  @Prop({ type: Types.ObjectId, ref: User.name })
-  createdAt: User;
+  @Prop({ type: [Types.ObjectId], ref: User.name })
+  author: string;
 
   @Prop({ type: [Types.ObjectId], ref: User.name })
-  participants: User[];
+  participant: string;
 
   @Prop()
   name: string;

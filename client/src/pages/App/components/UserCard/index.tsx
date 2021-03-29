@@ -7,6 +7,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { friendsApi } from '@/api/friends';
+import { Friend } from '@/types/Friend';
 import { upperCaseFirstSymbol } from '../../../../helpers/upperCaseFirstSymbol';
 import { StyledCard, Content, Title } from '../StyledCard';
 
@@ -28,25 +29,24 @@ const UserAddIcon = styled(UserAddOutlined)`
 `;
 
 type Props = {
-  lastName: string;
-  firstName: string;
-  avatar: string;
-  id: string;
+  user: Friend;
   isFriend: boolean;
+  isActive: boolean;
   changeFriendStatus: (id: string, isFriend?: boolean) => void;
+  onClick: (userId: string) => void;
 };
 
 export const UserCard = (props: Props) => {
   const fullName = useMemo(
     () =>
-      `${upperCaseFirstSymbol(props.firstName)} ${upperCaseFirstSymbol(
-        props.lastName,
+      `${upperCaseFirstSymbol(props.user.firstName)} ${upperCaseFirstSymbol(
+        props.user.lastName,
       )}`,
-    [props.firstName, props.lastName],
+    [props.user],
   );
 
   const addFriend = useCallback(async () => {
-    const result = await friendsApi.add(props.id);
+    const result = await friendsApi.add(props.user._id);
 
     if (result.err) {
       notification.error({
@@ -58,15 +58,15 @@ export const UserCard = (props: Props) => {
       return;
     }
 
-    props.changeFriendStatus(props.id, true);
+    props.changeFriendStatus(props.user._id, true);
 
     notification.success({
       message: `${fullName} добавлен в друзья`,
       duration: 3,
     });
-  }, [props.id, props.changeFriendStatus, fullName]);
+  }, [props.user, props.changeFriendStatus, fullName]);
   const deleteFriend = useCallback(async () => {
-    const result = await friendsApi.delete(props.id);
+    const result = await friendsApi.delete(props.user._id);
 
     if (result.err) {
       notification.error({
@@ -78,20 +78,24 @@ export const UserCard = (props: Props) => {
       return;
     }
 
-    props.changeFriendStatus(props.id, false);
+    props.changeFriendStatus(props.user._id, false);
 
     notification.warning({
       message: `${fullName} удален из друзей`,
       duration: 3,
     });
-  }, [props.id, props.changeFriendStatus, fullName]);
+  }, [props.user, props.changeFriendStatus, fullName]);
+
+  const openChatWindow = () => {
+    props.onClick(props.user._id);
+  };
 
   return (
-    <StyledCard>
+    <StyledCard onClick={openChatWindow} isActive={props.isActive}>
       <Avatar
         size={56}
-        src={props.avatar}
-        icon={!props.avatar && <UserOutlined />}
+        src={props.user.avatar}
+        icon={!props.user.avatar && <UserOutlined />}
       />
       <Content>
         <Title>{fullName}</Title>

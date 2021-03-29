@@ -10,7 +10,7 @@ export class Message {
   createdAt: Date;
 
   @Prop({ type: Types.ObjectId, ref: User.name })
-  author: User;
+  author: string;
 
   @Prop()
   content: string;

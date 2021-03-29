@@ -88,7 +88,7 @@ export const NavSider = () => {
   };
 
   const onSelectItemMenu = (info: SelectInfo) => {
-    history.push(info.key.toString());
+    history.push(`/${info.key.toString()}`);
   };
 
   const onLogoutHandler = async () => {

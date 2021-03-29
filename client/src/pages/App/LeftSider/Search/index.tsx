@@ -4,6 +4,7 @@ import { Header } from 'antd/es/layout/layout';
 import { SearchUser } from '@/types/User';
 import { userApi } from '@/api/user';
 import styled from 'styled-components';
+import { useHistory, useParams } from 'react-router';
 import { UserCard } from '../../components/UserCard';
 import { SearchInput } from '../../components/SearchInput';
 
@@ -37,6 +38,12 @@ export const Search = () => {
   ] = useState<boolean>(false);
   const [usersNotFound, setUsersNotFoundStatus] = useState<boolean>(false);
   const [usersIsStayed, setUsersStayedStatus] = useState<boolean>(false);
+
+  const history = useHistory();
+
+  const currentUser = useParams<{ id: string }>();
+
+  const isActive = (userId: string) => currentUser.id === userId;
 
   const onSearchUsers = useCallback(async () => {
     setUsersFetchingStatus(true);
@@ -89,6 +96,10 @@ export const Search = () => {
     [usersList],
   );
 
+  const openChatWindow = (userId: string) => {
+    history.push(`/search/${userId}`);
+  };
+
   return (
     <Layout style={{ height: '100vh' }}>
       <Header style={{ backgroundColor: '#f3f4f6' }}>
@@ -104,12 +115,11 @@ export const Search = () => {
           {usersList.map(user => (
             <UserCard
               key={user._id}
-              id={user._id}
-              lastName={user.lastName}
-              firstName={user.firstName}
-              avatar={user.avatar}
+              user={user}
               isFriend={user.isFriend}
+              isActive={isActive(user._id)}
               changeFriendStatus={changeFriendStatus}
+              onClick={openChatWindow}
             />
           ))}
           <UploadMoreContainer>

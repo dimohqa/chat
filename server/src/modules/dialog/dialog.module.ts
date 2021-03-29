@@ -4,6 +4,8 @@ import { DialogService } from './dialog.service';
 import { MongooseModule } from '@nestjs/mongoose';
 import { DialogSchema } from '../../schemas/dialog.schema';
 import { Dialog } from '../../schemas/dialog.schema';
+import { MessagesService } from '../messages/messages.service';
+import { Message, MessageSchema } from '../../schemas/message.schema';
 
 @Module({
   imports: [
@@ -12,8 +14,12 @@ import { Dialog } from '../../schemas/dialog.schema';
         name: Dialog.name,
         schema: DialogSchema,
       },
+      {
+        name: Message.name,
+        schema: MessageSchema,
+      },
     ]),
   ],
-  providers: [DialogGateway, DialogService],
+  providers: [DialogGateway, DialogService, MessagesService],
 })
 export class DialogModule {}

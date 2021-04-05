@@ -4,7 +4,7 @@ import { Loader } from '@/components/Loader';
 import { useDispatch, useSelector } from 'react-redux';
 import { setConnectedStatus } from '@/store/socket';
 import { RootState } from '@/store/rootReducer';
-import { Chat } from '@/components/Chat';
+import { Chat } from './Chat';
 import { LeftSider } from './LeftSider';
 import { NavSider } from './NavSider';
 import { socket } from '../../helpers/socket';

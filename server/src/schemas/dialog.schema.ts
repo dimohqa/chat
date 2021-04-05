@@ -11,10 +11,7 @@ export class Dialog {
   messages: Message[];
 
   @Prop({ type: [Types.ObjectId], ref: User.name })
-  author: string;
-
-  @Prop({ type: [Types.ObjectId], ref: User.name })
-  participant: string;
+  participants: Types.ObjectId[];
 
   @Prop()
   name: string;

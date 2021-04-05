@@ -18,18 +18,18 @@ export const DialogsList = () => {
   const currentDialog = useParams<{ id: string }>();
 
   const getParticipant = (dialog: Dialog) =>
-    dialog.author._id === userId ? dialog.author : dialog.participant;
+    dialog.participants.filter(participant => participant._id !== userId)[0];
 
   const getActiveDialog = (dialog: Dialog) =>
     getParticipant(dialog)._id === currentDialog.id;
 
   useEffect(() => {
-    socket.emit('dialogs');
+    socket.emit('dialogs', null, (newDialogs: Dialog[]) =>
+      setDialogs(newDialogs),
+    );
   }, []);
 
-  useEffect(() => {
-    socket.on('dialogs', (newDialogs: Dialog[]) => setDialogs(newDialogs));
-  }, []);
+  console.log(dialogs);
 
   return (
     <Layout>
@@ -46,6 +46,7 @@ export const DialogsList = () => {
           <DialogCard
             key={dialog._id}
             user={getParticipant(dialog)}
+            latestMessage={dialog.messages[0]}
             isActive={getActiveDialog(dialog)}
           />
         ))}

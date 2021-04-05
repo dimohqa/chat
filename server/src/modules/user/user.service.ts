@@ -54,10 +54,16 @@ export class UserService {
       return { foundItems: [], totalCount: 0 };
     }
 
-    const friends = await this.friendsModel.findOne(
+    let friends = await this.friendsModel.findOne(
       { userId },
       { friends: true },
     );
+
+    if (!friends) {
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      friends = { friends: [] };
+    }
 
     const newFoundItemsWithFriendStatus = aggregatePaginationUsers[0].foundItems.map(
       (user) => {
@@ -100,15 +106,15 @@ export class UserService {
     return this.userModel.findOne({ email });
   }
 
-  async findOne(object: Partial<UserDocument>) {
-    return this.userModel.findOne(object, {
-      firstName: true,
-      lastName: true,
-      avatar: true,
-      email: true,
-      _id: false,
-    });
-  }
+  // async findOne(object: Partial<UserDocument>) {
+  //   return this.userModel.findOne(object, {
+  //     firstName: true,
+  //     lastName: true,
+  //     avatar: true,
+  //     email: true,
+  //     _id: false,
+  //   });
+  // }
 
   async getById(userId: string) {
     return this.userModel.findById(userId, {

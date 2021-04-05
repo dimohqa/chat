@@ -5,7 +5,7 @@ import {
   RefreshToken,
   RefreshTokenDocument,
 } from '../../schemas/refreshToken.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { sign, TokenExpiredError, verify } from 'jsonwebtoken';
 import { JwtToken } from '../../interfaces/jwtToken';
 import { UserService } from '../user/user.service';
@@ -121,9 +121,7 @@ export class AuthService {
       }
     }
 
-    const user = await this.userService.findOne({
-      _id: decodedRefreshToken.userId,
-    });
+    const user = await this.userService.getById(decodedRefreshToken.userId);
 
     if (!user) {
       throw new WsException('Ошибка авторизации 4');

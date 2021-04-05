@@ -1,4 +1,9 @@
-import { SubscribeMessage, WebSocketGateway } from '@nestjs/websockets';
+import {
+  ConnectedSocket,
+  MessageBody,
+  SubscribeMessage,
+  WebSocketGateway,
+} from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import { DialogService } from './dialog.service';
 import { InjectModel } from '@nestjs/mongoose';
@@ -16,21 +21,40 @@ export class DialogGateway {
   ) {}
 
   @SubscribeMessage('dialogs')
-  getDialogs(client: Socket) {
-    return this.dialogService.getDialogs(client.request.userId);
+  async getDialogs(client: Socket) {
+    const dialogs = await this.dialogService.getDialogs(client.request.userId);
+
+    console.log(dialogs);
+
+    return dialogs;
   }
 
   @SubscribeMessage('sendMessage')
-  async sendMessage(client: Socket, recipientId: string, content: string) {
+  async sendMessage(
+    @MessageBody() body: { recipientId: string; content: string },
+    @ConnectedSocket() client: Socket,
+  ) {
     const userId = client.request.userId;
 
-    const message = await this.messagesService.createMessage(userId, content);
+    console.log(userId);
+    console.log(body.recipientId);
 
-    let dialog = await this.dialogService.getDialog(client.request.userId);
+    const message = await this.messagesService.createMessage(
+      userId,
+      body.content,
+    );
+
+    let dialog = await this.dialogService.getDialog(
+      client.request.userId,
+      body.recipientId,
+    );
 
     if (!dialog) {
-      dialog = await this.dialogService.createDialog(userId, recipientId);
+      console.log('2');
+      dialog = await this.dialogService.createDialog(userId, body.recipientId);
     }
+
+    console.log(dialog);
 
     await this.dialogService.addMessage(dialog._id, message);
   }

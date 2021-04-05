@@ -4,9 +4,9 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "start:dev": "concurrently \"yarn start:client\" \"yarn start:server\"",
-    "start:client": "cd ./client && yarn start:dev",
-    "start:server": "cd ./server && yarn start:dev"
+    "start:dev": "concurrently \"npm run start:client\" \"npm run start:server\"",
+    "start:client": "cd ./client && npm run start:dev",
+    "start:server": "cd ./server && npm run start:dev"
   },
   "dependencies": {
     "concurrently": "^5.3.0",

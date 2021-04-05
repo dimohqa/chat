@@ -3,7 +3,8 @@ import {
   Controller,
   DefaultValuePipe,
   Get,
-  Param, ParseIntPipe,
+  Param,
+  ParseIntPipe,
   Patch,
   Post,
   Query,
@@ -17,6 +18,7 @@ import { UserId } from '../../helpers/user-id.decorator';
 import { AuthGuard } from '../../middlewares/auth.guard';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
+import { Types } from 'mongoose';
 
 @Controller('user')
 export class UserController {
@@ -36,7 +38,7 @@ export class UserController {
   @Get('/get')
   @UseGuards(AuthGuard)
   async get(@UserId() userId: string) {
-    return this.userService.findOne({ _id: userId });
+    return this.userService.getById(userId);
   }
 
   @Post('/uploadAvatar')

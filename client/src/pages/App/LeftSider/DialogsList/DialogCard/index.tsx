@@ -2,11 +2,13 @@ import React, { useMemo } from 'react';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import { Friend } from '@/types/Friend';
+import { Message } from '@/types/Message';
 import { StyledCard, Content, Title } from '../../../components/StyledCard';
 import { upperCaseFirstSymbol } from '../../../../../helpers/upperCaseFirstSymbol';
 
 type Props = {
   user: Friend;
+  latestMessage: Message;
   isActive: boolean;
 };
 
@@ -28,7 +30,7 @@ export const DialogCard = (props: Props) => {
       />
       <Content>
         <Title>{fullName}</Title>
-        <span>...</span>
+        <span>{props.latestMessage.content}</span>
       </Content>
     </StyledCard>
   );

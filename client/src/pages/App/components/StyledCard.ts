@@ -9,7 +9,6 @@ export const StyledCard = styled(Card)<{ isActive?: boolean }>`
   .ant-card-body {
     width: 100%;
     display: flex;
-    justify-content: space-between;
     padding: 0;
   }
   .ant-card-body::before {

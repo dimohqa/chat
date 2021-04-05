@@ -57,9 +57,9 @@ export class AuthController {
       throw new ForbiddenException('Password is not correct');
     }
 
-    await this.authService.authorizeUser(user.id, response);
+    await this.authService.authorizeUser(user._id, response);
 
-    return { userId: user.id };
+    return { userId: user._id };
   }
 
   // TODO: тут не определен userId, поэтому создается рандомный jwt без userId. Добавить auth

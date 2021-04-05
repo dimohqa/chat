@@ -10,6 +10,6 @@ export class UserGateway {
 
   @SubscribeMessage('profile')
   async profile(client: Socket) {
-    return await this.userService.findOne({ _id: client.request.userId });
+    return await this.userService.getById(client.request.userId);
   }
 }

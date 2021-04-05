@@ -1,8 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Dialog, DialogDocument } from '../../schemas/dialog.schema';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Message } from '../../schemas/message.schema';
+import { User } from '../../schemas/user.schema';
+
+const { ObjectId } = Types;
 
 @Injectable()
 export class DialogService {
@@ -12,17 +15,36 @@ export class DialogService {
   ) {}
 
   async getDialogs(userId: string) {
-    return this.dialogModel.find({ participants: userId });
+    return this.dialogModel
+      .find(
+        { participants: ObjectId(userId) },
+        { participants: true, messages: { $slice: ['$messages', -1] } },
+      )
+      .populate({
+        path: 'participants',
+        model: User.name,
+        select: {
+          firstName: true,
+          lastName: true,
+        },
+      })
+      .populate({
+        path: 'messages',
+        model: Message.name,
+      });
   }
 
-  async getDialog(userId: string) {
-    return this.dialogModel.findOne({ participants: userId });
+  async getDialog(userId: string, recipientId: string) {
+    return this.dialogModel.findOne({
+      participants: {
+        $all: [ObjectId(userId), ObjectId(recipientId)],
+      },
+    });
   }
 
   async createDialog(createdUserId: string, participantId: string) {
     return this.dialogModel.create({
-      author: createdUserId,
-      participant: participantId,
+      participants: [ObjectId(participantId), ObjectId(createdUserId)],
       messages: [],
       name: '',
     });

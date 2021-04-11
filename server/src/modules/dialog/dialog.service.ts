@@ -46,6 +46,10 @@ export class DialogService {
     return this.dialogModel.findById(dialogId).populate({
       path: 'messages',
       model: Message.name,
+      populate: {
+        path: 'author',
+        model: User.name,
+      },
     });
   }
 

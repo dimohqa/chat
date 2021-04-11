@@ -7,6 +7,8 @@ import { chunkMessageListIntoGroups } from '../../../../helpers/chunkMessageList
 import { MessageGroup } from '../MessageGroup';
 
 const MessagesWrapper = styled.div`
+  display: flex;
+  align-items: flex-end;
   flex-grow: 1;
 `;
 

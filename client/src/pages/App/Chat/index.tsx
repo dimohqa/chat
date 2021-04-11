@@ -4,10 +4,7 @@ import { Header } from 'antd/es/layout/layout';
 import styled from 'styled-components';
 import { Route } from 'react-router';
 import { MessageInput } from '../components/MessageInput';
-
-const Content = styled.div`
-  flex-grow: 1;
-`;
+import { MessageList } from './MessageList';
 
 const StyledLayout = styled(Layout)`
   display: flex;
@@ -15,10 +12,10 @@ const StyledLayout = styled(Layout)`
 `;
 
 export const Chat = () => (
-  <Route path="/(chat|search|friends)/:id?">
+  <Route path="/(chat|search|friends)/:id">
     <StyledLayout>
       <Header />
-      <Content></Content>
+      <MessageList />
       <MessageInput />
     </StyledLayout>
   </Route>

@@ -22,11 +22,7 @@ export class DialogGateway {
 
   @SubscribeMessage('dialogs')
   async getDialogs(client: Socket) {
-    const dialogs = await this.dialogService.getDialogs(client.request.userId);
-
-    console.log(dialogs);
-
-    return dialogs;
+    return this.dialogService.getDialogs(client.request.userId);
   }
 
   @SubscribeMessage('sendMessage')
@@ -35,9 +31,6 @@ export class DialogGateway {
     @ConnectedSocket() client: Socket,
   ) {
     const userId = client.request.userId;
-
-    console.log(userId);
-    console.log(body.recipientId);
 
     const message = await this.messagesService.createMessage(
       userId,
@@ -50,12 +43,18 @@ export class DialogGateway {
     );
 
     if (!dialog) {
-      console.log('2');
       dialog = await this.dialogService.createDialog(userId, body.recipientId);
     }
 
-    console.log(dialog);
-
     await this.dialogService.addMessage(dialog._id, message);
+  }
+
+  @SubscribeMessage('getMessagesByDialogId')
+  async getMessagesByDialogId(@MessageBody() body: { dialogId: string }) {
+    const dialog = await this.dialogService.getMessagesByDialogId(
+      body.dialogId,
+    );
+
+    return dialog.messages;
   }
 }

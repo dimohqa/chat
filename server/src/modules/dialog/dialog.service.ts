@@ -42,6 +42,13 @@ export class DialogService {
     });
   }
 
+  async getMessagesByDialogId(dialogId: string) {
+    return this.dialogModel.findById(dialogId).populate({
+      path: 'messages',
+      model: Message.name,
+    });
+  }
+
   async createDialog(createdUserId: string, participantId: string) {
     return this.dialogModel.create({
       participants: [ObjectId(participantId), ObjectId(createdUserId)],

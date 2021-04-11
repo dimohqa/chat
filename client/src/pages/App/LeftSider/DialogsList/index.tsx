@@ -29,8 +29,6 @@ export const DialogsList = () => {
     );
   }, []);
 
-  console.log(dialogs);
-
   return (
     <Layout>
       <Header style={{ backgroundColor: '#f3f4f6' }}>
@@ -45,6 +43,7 @@ export const DialogsList = () => {
         {dialogs.map(dialog => (
           <DialogCard
             key={dialog._id}
+            dialogId={dialog._id}
             user={getParticipant(dialog)}
             latestMessage={dialog.messages[0]}
             isActive={getActiveDialog(dialog)}

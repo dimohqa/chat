@@ -91,7 +91,7 @@ export const UserCard = (props: Props) => {
   };
 
   return (
-    <StyledCard onClick={openChatWindow} isActive={props.isActive}>
+    <StyledCard onClick={openChatWindow} $isActive={props.isActive}>
       <Avatar
         size={56}
         src={props.user.avatar}

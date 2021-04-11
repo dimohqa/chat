@@ -1,10 +1,10 @@
 import styled, { css } from 'styled-components';
 import { Card } from 'antd';
 
-export const StyledCard = styled(Card)<{ isActive?: boolean }>`
+export const StyledCard = styled(Card)<{ $isActive?: boolean }>`
   padding: 8px 12px 8px 8px;
   height: 74px;
-  background-color: ${props => (props.isActive ? 'blue' : '#f3f4f6')};
+  background-color: ${props => (props.$isActive ? 'blue' : '#f3f4f6')};
 
   .ant-card-body {
     width: 100%;
@@ -18,13 +18,16 @@ export const StyledCard = styled(Card)<{ isActive?: boolean }>`
     content: inherit;
   }
   ${props =>
-    !props.isActive &&
+    !props.$isActive &&
     css`
       &:hover {
         background-color: #f0f0f0;
-        cursor: pointer;
       }
     `}
+
+  &:hover {
+    cursor: pointer;
+  }
 
   &:hover .icons-wrapper {
     visibility: visible;

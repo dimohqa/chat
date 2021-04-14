@@ -1,12 +1,14 @@
 import React, { useMemo } from 'react';
 import { Message as MessageType } from '@/types/Message';
 import styled, { css } from 'styled-components';
+import moment from 'moment';
 import { upperCaseFirstSymbol } from '../../../../helpers/upperCaseFirstSymbol';
 
 const MessageWrapper = styled.div<{ $isLastMessage: boolean }>`
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
   padding: 4px 8px;
+  min-width: 100px;
   color: #ffffff;
   background-color: #002766;
   border-radius: 5px;
@@ -14,6 +16,12 @@ const MessageWrapper = styled.div<{ $isLastMessage: boolean }>`
     props.$isLastMessage &&
     css`
       border-bottom-left-radius: 0;
+    `}
+
+  ${props =>
+    !props.$isLastMessage &&
+    css`
+      margin-left: 8px;
     `}
 `;
 
@@ -28,10 +36,18 @@ const Triangle = styled.div`
 const Wrapper = styled.div`
   display: flex;
   align-items: flex-end;
+  margin-bottom: 4px;
 `;
 
 const FullName = styled.div`
   color: #13c2c2;
+`;
+
+const Date = styled.div`
+  font-size: 12px;
+  margin-left: 4px;
+  margin-top: auto;
+  color: #d9d9d9;
 `;
 
 type Props = {
@@ -49,12 +65,20 @@ export const Message = (props: Props) => {
     [props.message],
   );
 
+  const date = useMemo(
+    () => moment(props.message.createdAt).format('HH:mm').toString(),
+    [props.message.createdAt],
+  );
+
   return (
     <Wrapper>
       {props.isLastMessage && <Triangle />}
       <MessageWrapper $isLastMessage={props.isLastMessage}>
-        {props.nameIsVisible && <FullName>{fullNameAuthor}</FullName>}
-        {props.message.content}
+        <div>
+          {props.nameIsVisible && <FullName>{fullNameAuthor}</FullName>}
+          <span>{props.message.content}</span>
+        </div>
+        <Date>{date}</Date>
       </MessageWrapper>
     </Wrapper>
   );

@@ -8,11 +8,16 @@ import { Message } from '../Message';
 const MessageGroupWrapper = styled.div`
   display: flex;
   align-items: flex-end;
-  margin: 16px 0;
+  margin: 8px 0;
+`;
+
+const Group = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const AuthorAvatar = styled(Avatar)`
-  margin-right: 8px;
+  margin-right: 4px;
 `;
 
 type Props = {
@@ -29,14 +34,16 @@ export const MessageGroup = (props: Props) => {
         src={author.avatar}
         icon={!author.avatar && <UserOutlined />}
       />
-      {props.messages.map((message, index) => (
-        <Message
-          key={message._id}
-          message={message}
-          nameIsVisible={index === 0}
-          isLastMessage={index === props.messages.length - 1}
-        />
-      ))}
+      <Group>
+        {props.messages.map((message, index) => (
+          <Message
+            key={message._id}
+            message={message}
+            nameIsVisible={index === 0}
+            isLastMessage={index === props.messages.length - 1}
+          />
+        ))}
+      </Group>
     </MessageGroupWrapper>
   );
 };

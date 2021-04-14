@@ -28,7 +28,7 @@ const SendIcon = styled(SendOutlined)`
 export const MessageInput = () => {
   const [message, setMessage] = useState<string>('');
 
-  const currentDialog = useParams<{ path: string; id: string }>();
+  const user = useParams<{ path: string; id: string }>();
 
   const onChangeMessage = (event: ChangeEvent<HTMLInputElement>) => {
     setMessage(event.target.value);
@@ -36,9 +36,10 @@ export const MessageInput = () => {
 
   const sendMessage = () => {
     socket.emit('sendMessage', {
-      recipientId: currentDialog.id,
+      recipientId: user.id,
       content: message,
     });
+    setMessage('');
   };
 
   return (

@@ -34,6 +34,10 @@ export class DialogService {
       });
   }
 
+  async getDialogById(dialogId: string) {
+    return this.dialogModel.findById(dialogId);
+  }
+
   async getDialog(userId: string, recipientId: string) {
     return this.dialogModel.findOne({
       participants: {
@@ -42,15 +46,21 @@ export class DialogService {
     });
   }
 
-  async getMessagesByDialogId(dialogId: string) {
-    return this.dialogModel.findById(dialogId).populate({
-      path: 'messages',
-      model: Message.name,
-      populate: {
-        path: 'author',
-        model: User.name,
-      },
-    });
+  async getMessagesDialog(recipientId: string, userId: string) {
+    return this.dialogModel
+      .findOne({
+        participants: {
+          $all: [ObjectId(recipientId), ObjectId(userId)],
+        },
+      })
+      .populate({
+        path: 'messages',
+        model: Message.name,
+        populate: {
+          path: 'author',
+          model: User.name,
+        },
+      });
   }
 
   async createDialog(createdUserId: string, participantId: string) {

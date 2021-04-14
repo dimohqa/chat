@@ -8,14 +8,15 @@ import { MessageGroup } from '../MessageGroup';
 
 const MessagesWrapper = styled.div`
   display: flex;
-  align-items: flex-end;
+  flex-direction: column;
+  justify-content: flex-end;
   flex-grow: 1;
 `;
 
 export const MessageList = () => {
   const [messageList, setMessageList] = useState<Message[]>([]);
 
-  const dialog = useParams<{ id: string }>();
+  const recipient = useParams<{ id: string }>();
 
   const groupsMessage = useMemo(() => chunkMessageListIntoGroups(messageList), [
     messageList,
@@ -24,12 +25,18 @@ export const MessageList = () => {
   useEffect(() => {
     socket.emit(
       'getMessagesByDialogId',
-      { dialogId: dialog.id },
+      { recipientId: recipient.id },
       (messages: Message[]) => {
         setMessageList(messages);
       },
     );
-  }, [dialog.id]);
+  }, [recipient.id]);
+
+  socket.on('newMessage', (message: Message) => {
+    console.log(message);
+    setMessageList([...messageList, message]);
+    console.log(messageList);
+  });
 
   return (
     <MessagesWrapper>

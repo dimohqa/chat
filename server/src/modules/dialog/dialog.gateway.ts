@@ -42,17 +42,26 @@ export class DialogGateway {
       body.recipientId,
     );
 
+    // let dialog = await this.dialogService.getDialogById(body.dialogId);
+
     if (!dialog) {
       dialog = await this.dialogService.createDialog(userId, body.recipientId);
     }
 
     await this.dialogService.addMessage(dialog._id, message);
+
+    client.emit('newMessage', message);
+    client.to(body.recipientId).emit('newMessage', message);
   }
 
   @SubscribeMessage('getMessagesByDialogId')
-  async getMessagesByDialogId(@MessageBody() body: { dialogId: string }) {
-    const dialog = await this.dialogService.getMessagesByDialogId(
-      body.dialogId,
+  async getMessagesByDialogId(
+    @MessageBody() body: { recipientId: string },
+    @ConnectedSocket() client: Socket,
+  ) {
+    const dialog = await this.dialogService.getMessagesDialog(
+      body.recipientId,
+      client.request.userId,
     );
 
     return dialog.messages;

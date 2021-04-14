@@ -17,6 +17,8 @@ export const DialogsList = () => {
 
   const currentDialog = useParams<{ id: string }>();
 
+  console.log(userId);
+
   const getParticipant = (dialog: Dialog) =>
     dialog.participants.filter(participant => participant._id !== userId)[0];
 

@@ -9,7 +9,7 @@ import { upperCaseFirstSymbol } from '../../../../../helpers/upperCaseFirstSymbo
 
 type Props = {
   user: Friend;
-  dialogId: string;
+  // dialogId: string;
   latestMessage: Message;
   isActive: boolean;
 };
@@ -29,7 +29,7 @@ export const DialogCard = (props: Props) => {
     if (props.isActive) {
       return;
     }
-    history.push(`/chat/${props.dialogId}`);
+    history.push(`/chat/${props.user._id}`);
   };
 
   return (

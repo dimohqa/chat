@@ -16,6 +16,11 @@ export class AppGateway implements OnGatewayConnection {
   async handleConnection(client: Socket) {
     try {
       await this.AuthService.checkAuthorization(client);
+      client.join(client.request.userId, (err) => {
+        if (!err) {
+          console.log('client connected to ' + client.request.userId + ' room');
+        }
+      });
       client.emit('connection', true);
     } catch (error) {
       console.log('error connection: ', error);

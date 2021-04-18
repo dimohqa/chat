@@ -2,13 +2,18 @@ import React, { useMemo } from 'react';
 import { Message as MessageType } from '@/types/Message';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import { Message } from '../Message';
 
-const MessageGroupWrapper = styled.div`
+const MessageGroupWrapper = styled.div<{ isReverse?: boolean }>`
   display: flex;
   align-items: flex-end;
   margin: 8px 0;
+  ${props =>
+    props.isReverse &&
+    css`
+      flex-direction: row-reverse;
+    `}
 `;
 
 const Group = styled.div`
@@ -22,6 +27,7 @@ const AuthorAvatar = styled(Avatar)`
 
 type Props = {
   messages: MessageType[];
+  dialogIsMultiple: boolean;
 };
 
 export const MessageGroup = (props: Props) => {
@@ -39,7 +45,7 @@ export const MessageGroup = (props: Props) => {
           <Message
             key={message._id}
             message={message}
-            nameIsVisible={index === 0}
+            nameIsVisible={index === 0 && props.dialogIsMultiple}
             isLastMessage={index === props.messages.length - 1}
           />
         ))}

@@ -10,6 +10,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Dialog, DialogDocument } from '../../schemas/dialog.schema';
 import { Model } from 'mongoose';
 import { MessagesService } from '../messages/messages.service';
+import { Message } from '../../schemas/message.schema';
+import { User } from '../../schemas/user.schema';
 
 @WebSocketGateway()
 export class DialogGateway {
@@ -51,16 +53,27 @@ export class DialogGateway {
     client.to(body.recipientId).emit('newMessage', message);
   }
 
-  @SubscribeMessage('getMessagesByDialogId')
+  @SubscribeMessage('getDialog')
   async getMessagesByDialogId(
     @MessageBody() body: { recipientId: string },
     @ConnectedSocket() client: Socket,
-  ) {
-    const dialog = await this.dialogService.getMessagesDialog(
+  ): Promise<DialogDocument> {
+    const dialog = await this.dialogService.getDialogByIds(
       body.recipientId,
       client.request.userId,
     );
 
-    return dialog.messages;
+    if (!dialog) {
+      return null;
+    }
+
+    return await this.dialogModel.populate(dialog, {
+      path: 'messages',
+      model: Message.name,
+      populate: {
+        path: 'author',
+        model: User.name,
+      },
+    });
   }
 }

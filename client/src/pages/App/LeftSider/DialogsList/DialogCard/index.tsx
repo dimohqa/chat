@@ -9,7 +9,6 @@ import { upperCaseFirstSymbol } from '../../../../../helpers/upperCaseFirstSymbo
 
 type Props = {
   user: Friend;
-  // dialogId: string;
   latestMessage: Message;
   isActive: boolean;
 };

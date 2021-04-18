@@ -44,7 +44,12 @@ export const MessageInput = () => {
 
   return (
     <InputWrapper>
-      <Input value={message} onChange={onChangeMessage} size="large" />
+      <Input
+        size="large"
+        value={message}
+        onChange={onChangeMessage}
+        onPressEnter={sendMessage}
+      />
       <SendIcon onClick={sendMessage} />
     </InputWrapper>
   );

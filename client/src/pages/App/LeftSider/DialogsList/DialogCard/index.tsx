@@ -41,14 +41,16 @@ export const DialogCard = (props: Props) => {
       />
       <Content>
         <Title>{fullName}</Title>
-        <Space size={4}>
-          <Avatar
-            size={22}
-            src={props.latestMessage.author.avatar}
-            icon={!props.latestMessage.author.avatar && <UserOutlined />}
-          />
-          <span>{props.latestMessage.content}</span>
-        </Space>
+        {props.latestMessage && (
+          <Space size={4}>
+            <Avatar
+              size={22}
+              src={props.latestMessage.author.avatar}
+              icon={!props.latestMessage.author.avatar && <UserOutlined />}
+            />
+            <span>{props.latestMessage.content}</span>
+          </Space>
+        )}
       </Content>
     </StyledCard>
   );

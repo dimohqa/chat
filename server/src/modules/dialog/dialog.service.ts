@@ -18,20 +18,22 @@ export class DialogService {
     return this.dialogModel
       .find(
         { participants: ObjectId(userId) },
-        { participants: true, messages: { $slice: ['$messages', -1] } },
+        { participants: true, messages: { $slice: -1 } },
       )
-      .populate({
-        path: 'participants',
-        model: User.name,
-        select: {
-          firstName: true,
-          lastName: true,
+      .populate([
+        {
+          path: 'participants',
+          model: User.name,
+          select: {
+            firstName: true,
+            lastName: true,
+          },
         },
-      })
-      .populate({
-        path: 'messages',
-        model: Message.name,
-      });
+        {
+          path: 'messages',
+          model: Message.name,
+        },
+      ]);
   }
 
   async getDialogById(dialogId: string) {

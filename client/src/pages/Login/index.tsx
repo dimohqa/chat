@@ -1,8 +1,6 @@
 import React, { useCallback, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { notification } from 'antd';
-import { setUserId } from '@/store/user';
 import { authApi } from '@/api/auth';
 import { LoginLayout } from './LoginLayout';
 
@@ -11,7 +9,6 @@ export const LoginPage = () => {
   const [password, setPassword] = useState<string>('');
   const [singInIsLoading, setSignInLoadingStatus] = useState(false);
 
-  const dispatch = useDispatch();
   const history = useHistory();
 
   const renderErrorLogin = () => {
@@ -34,11 +31,10 @@ export const LoginPage = () => {
       return;
     }
 
-    dispatch(setUserId(result.val));
     setSignInLoadingStatus(false);
 
     history.push('/');
-  }, [dispatch, email, history, password]);
+  }, [email, history, password]);
 
   return (
     <LoginLayout

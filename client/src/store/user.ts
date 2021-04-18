@@ -20,8 +20,8 @@ const user = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    setUserId(state, action: PayloadAction<{ userId: string }>) {
-      state.userId = action.payload.userId;
+    setUserId(state, action: PayloadAction<string>) {
+      state.userId = action.payload;
       state.isLogin = true;
     },
     setLoadingStatus(state, action: PayloadAction<boolean>) {

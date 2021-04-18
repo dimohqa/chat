@@ -17,8 +17,6 @@ export const DialogsList = () => {
 
   const currentDialog = useParams<{ id: string }>();
 
-  console.log(userId);
-
   const getParticipant = (dialog: Dialog) =>
     dialog.participants.filter(participant => participant._id !== userId)[0];
 
@@ -45,7 +43,6 @@ export const DialogsList = () => {
         {dialogs.map(dialog => (
           <DialogCard
             key={dialog._id}
-            dialogId={dialog._id}
             user={getParticipant(dialog)}
             latestMessage={dialog.messages[0]}
             isActive={getActiveDialog(dialog)}

@@ -22,7 +22,7 @@ export class DialogGateway {
 
   @SubscribeMessage('dialogs')
   async getDialogs(client: Socket) {
-    return this.dialogService.getDialogs(client.request.userId);
+    return await this.dialogService.getDialogs(client.request.userId);
   }
 
   @SubscribeMessage('sendMessage')
@@ -37,10 +37,7 @@ export class DialogGateway {
       body.content,
     );
 
-    let dialog = await this.dialogService.getDialog(
-      client.request.userId,
-      body.recipientId,
-    );
+    let dialog = await this.dialogService.getDialog(userId, body.recipientId);
 
     // let dialog = await this.dialogService.getDialogById(body.dialogId);
 

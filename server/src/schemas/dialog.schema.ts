@@ -7,10 +7,10 @@ export type DialogDocument = Dialog & Document;
 
 @Schema()
 export class Dialog {
-  @Prop({ type: [Types.ObjectId], ref: Message.name })
+  @Prop({ type: [{ type: Types.ObjectId, ref: Message.name }] })
   messages: Message[];
 
-  @Prop({ type: [Types.ObjectId], ref: User.name })
+  @Prop({ type: [{ type: Types.ObjectId, ref: User.name }] })
   participants: Types.ObjectId[];
 
   @Prop()

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router';
 import { Message } from '@/types/Message';
 import styled from 'styled-components';
@@ -7,20 +7,23 @@ import { chunkMessageListIntoGroups } from '../../../../helpers/chunkMessageList
 import { MessageGroup } from '../MessageGroup';
 
 const MessagesWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  flex-grow: 1;
+  height: 100%;
+  overflow: auto;
 `;
 
 export const MessageList = () => {
   const [messageList, setMessageList] = useState<Message[]>([]);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const recipient = useParams<{ id: string }>();
 
   const groupsMessage = useMemo(() => chunkMessageListIntoGroups(messageList), [
     messageList,
   ]);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
 
   useEffect(() => {
     socket.emit(
@@ -32,17 +35,26 @@ export const MessageList = () => {
     );
   }, [recipient.id]);
 
-  socket.on('newMessage', (message: Message) => {
-    console.log(message);
-    setMessageList([...messageList, message]);
-    console.log(messageList);
+  useEffect(() => {
+    socket.on('newMessage', (message: Message) => {
+      setMessageList([...messageList, message]);
+    });
+
+    return () => {
+      socket.removeListener('newMessage');
+    };
   });
+
+  useEffect(() => {
+    scrollToBottom();
+  }, [messageList]);
 
   return (
     <MessagesWrapper>
-      {[...groupsMessage].map(([key, value]) => (
-        <MessageGroup messages={value} key={key} />
+      {groupsMessage.map(messages => (
+        <MessageGroup messages={messages} key={messages[0]._id} />
       ))}
+      <div ref={messagesEndRef} />
     </MessagesWrapper>
   );
 };

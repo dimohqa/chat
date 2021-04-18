@@ -21,7 +21,10 @@ export class AppGateway implements OnGatewayConnection {
           console.log('client connected to ' + client.request.userId + ' room');
         }
       });
-      client.emit('connection', true);
+      client.emit('connection', {
+        connection: true,
+        userId: client.request.userId,
+      });
     } catch (error) {
       console.log('error connection: ', error);
       client.emit('errorAuth');

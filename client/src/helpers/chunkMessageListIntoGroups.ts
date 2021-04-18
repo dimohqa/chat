@@ -1,17 +1,24 @@
 import { Message } from '@/types/Message';
 
 export const chunkMessageListIntoGroups = (messageList: Message[]) => {
-  const mapMessage = new Map<string, Message[]>();
+  const mapMessage: Message[][] = [];
+  let lastMessage: Message | null = null;
 
-  messageList.forEach(message => {
-    if (mapMessage.has(message.author._id)) {
-      const existMessages = mapMessage.get(message.author._id) || [];
-      mapMessage.set(message.author._id, [...existMessages, message]);
+  messageList.forEach((message, index) => {
+    if (index === 0) {
+      mapMessage.push([message]);
+      lastMessage = message;
 
       return;
     }
 
-    mapMessage.set(message.author._id, [message]);
+    if (lastMessage && lastMessage.author._id === message.author._id) {
+      mapMessage[mapMessage.length - 1].push(message);
+    } else {
+      mapMessage.push([message]);
+    }
+
+    lastMessage = message;
   });
 
   return mapMessage;

@@ -99,7 +99,6 @@ export const UserCard = (props: Props) => {
       />
       <Content>
         <Title>{fullName}</Title>
-        <span>Новосибирск, 21 год</span>
       </Content>
       <IconsWrapper className="icons-wrapper">
         {props.isFriend ? (

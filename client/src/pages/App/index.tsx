@@ -35,7 +35,7 @@ export const App = () => {
     <Layout style={{ height: '100%' }}>
       <NavSider />
       <LeftSider />
-      <Route path="/(chat|search|friends)/:id">
+      <Route path="/(chat|friends)/:id">
         <Chat />
       </Route>
     </Layout>

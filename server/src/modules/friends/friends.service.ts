@@ -45,6 +45,7 @@ export class FriendsService {
       await this.friendsModel.updateOne(
         { userId: Types.ObjectId(userId) },
         { $addToSet: { friends: Types.ObjectId(friendId) } },
+        { upsert: true },
       );
     } catch (error) {
       throw new HttpException(

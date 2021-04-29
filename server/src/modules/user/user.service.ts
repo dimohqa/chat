@@ -32,6 +32,8 @@ export class UserService {
               $project: {
                 firstName: true,
                 lastName: true,
+                age: true,
+                city: true,
                 _id: true,
                 avatar: true,
               },

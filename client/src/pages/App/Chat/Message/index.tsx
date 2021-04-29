@@ -4,13 +4,16 @@ import styled, { css } from 'styled-components';
 import moment from 'moment';
 import { upperCaseFirstSymbol } from '../../../../helpers/upperCaseFirstSymbol';
 
-const MessageWrapper = styled.div<{ $isLastMessage: boolean }>`
+const MessageWrapper = styled.div<{
+  $isLastMessage: boolean;
+  $isMyMessage: boolean;
+}>`
   display: flex;
   justify-content: space-between;
   padding: 4px 8px;
   min-width: 100px;
   color: #ffffff;
-  background-color: #002766;
+  background-color: ${props => (props.$isMyMessage ? '#391085' : '#002766')};
   border-radius: 5px;
   ${props =>
     props.$isLastMessage &&
@@ -25,12 +28,16 @@ const MessageWrapper = styled.div<{ $isLastMessage: boolean }>`
     `}
 `;
 
-const Triangle = styled.div`
+const Triangle = styled.div<{
+  $isMyMessage: boolean;
+}>`
   width: 4px;
   height: 4px;
   border: 4px solid transparent;
-  border-right: 4px solid #002766;
-  border-bottom: 4px solid #002766;
+  border-right: 4px solid
+    ${props => (props.$isMyMessage ? '#391085' : '#002766')};
+  border-bottom: 4px solid
+    ${props => (props.$isMyMessage ? '#391085' : '#002766')};
 `;
 
 const Wrapper = styled.div`
@@ -54,6 +61,7 @@ type Props = {
   message: MessageType;
   nameIsVisible: boolean;
   isLastMessage: boolean;
+  isMyMessage: boolean;
 };
 
 export const Message = (props: Props) => {
@@ -72,8 +80,11 @@ export const Message = (props: Props) => {
 
   return (
     <Wrapper>
-      {props.isLastMessage && <Triangle />}
-      <MessageWrapper $isLastMessage={props.isLastMessage}>
+      {props.isLastMessage && <Triangle $isMyMessage={props.isMyMessage} />}
+      <MessageWrapper
+        $isLastMessage={props.isLastMessage}
+        $isMyMessage={props.isMyMessage}
+      >
         <div>
           {props.nameIsVisible && <FullName>{fullNameAuthor}</FullName>}
           <span>{props.message.content}</span>

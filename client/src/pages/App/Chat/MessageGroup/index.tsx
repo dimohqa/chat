@@ -3,6 +3,8 @@ import { Message as MessageType } from '@/types/Message';
 import { Avatar } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 import styled, { css } from 'styled-components';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/store/rootReducer';
 import { Message } from '../Message';
 
 const MessageGroupWrapper = styled.div<{ isReverse?: boolean }>`
@@ -33,6 +35,8 @@ type Props = {
 export const MessageGroup = (props: Props) => {
   const author = useMemo(() => props.messages[0].author, [props.messages]);
 
+  const { userId } = useSelector((root: RootState) => root.user);
+
   return (
     <MessageGroupWrapper>
       <AuthorAvatar
@@ -47,6 +51,7 @@ export const MessageGroup = (props: Props) => {
             message={message}
             nameIsVisible={index === 0 && props.dialogIsMultiple}
             isLastMessage={index === props.messages.length - 1}
+            isMyMessage={message.author._id === userId}
           />
         ))}
       </Group>

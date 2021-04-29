@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setConnectedStatus } from '@/store/socket';
 import { RootState } from '@/store/rootReducer';
 import { setUserId } from '@/store/user';
+import { Route } from 'react-router';
 import { Chat } from './Chat';
 import { LeftSider } from './LeftSider';
 import { NavSider } from './NavSider';
@@ -34,7 +35,9 @@ export const App = () => {
     <Layout style={{ height: '100%' }}>
       <NavSider />
       <LeftSider />
-      <Chat />
+      <Route path="/(chat|search|friends)/:id">
+        <Chat />
+      </Route>
     </Layout>
   );
 };

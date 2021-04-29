@@ -102,7 +102,7 @@ export const ProfileModal = (props: Props) => {
       <Header>
         <Avatar
           size={128}
-          src={props.profile.avatar && props.profile.avatar}
+          src={props.profile && `/${props.profile.avatar}`}
           icon={!props.profile.avatar && <UserOutlined />}
         />
         <ImgCrop rotate>

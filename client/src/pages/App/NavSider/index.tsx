@@ -129,7 +129,7 @@ export const NavSider = () => {
             <ButtonAvatar onClick={onOpenProfileModal}>
               <Avatar
                 size={48}
-                src={userProfile.avatar ? userProfile.avatar : undefined}
+                src={userProfile.avatar ? `/${userProfile.avatar}` : undefined}
                 icon={!userProfile.avatar && <UserOutlined />}
               />
             </ButtonAvatar>

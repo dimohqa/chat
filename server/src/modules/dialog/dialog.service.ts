@@ -32,6 +32,13 @@ export class DialogService {
         {
           path: 'messages',
           model: Message.name,
+          populate: {
+            path: 'author',
+            model: User.name,
+            select: {
+              avatar: true,
+            },
+          },
         },
       ]);
   }

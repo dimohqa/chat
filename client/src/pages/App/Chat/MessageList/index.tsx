@@ -1,15 +1,13 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { useParams } from 'react-router';
+import React, { useEffect, useMemo, useRef } from 'react';
 import { Message } from '@/types/Message';
 import styled from 'styled-components';
-import { Dialog } from '@/types/Dialog';
-import { socket } from '../../../../helpers/socket';
 import { chunkMessageListIntoGroups } from '../../../../helpers/chunkMessageListIntoGroups';
 import { MessageGroup } from '../MessageGroup';
 
 const MessagesWrapper = styled.div`
   height: 100%;
   overflow: auto;
+  padding: 0 10px;
 `;
 
 const NotFoundWrapper = styled.div`
@@ -19,58 +17,29 @@ const NotFoundWrapper = styled.div`
   justify-content: center;
 `;
 
-export const MessageList = () => {
-  const [messageList, setMessageList] = useState<Message[]>([]);
-  const [dialogIsMultiple, setDialogMultipleStatus] = useState<boolean>(false);
-  const [messageNotFound, setMessageFoundStatus] = useState<boolean>(false);
+type Props = {
+  messages: Message[];
+  dialogIsMultiple: boolean;
+  messageNotFound: boolean;
+};
 
+export const MessageList = (props: Props) => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const recipient = useParams<{ id: string }>();
-
-  const groupsMessage = useMemo(() => chunkMessageListIntoGroups(messageList), [
-    messageList,
-  ]);
+  const groupsMessage = useMemo(
+    () => chunkMessageListIntoGroups(props.messages),
+    [props.messages],
+  );
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
   useEffect(() => {
-    socket.emit(
-      'getDialog',
-      { recipientId: recipient.id },
-      (responseDialog: Dialog) => {
-        if (!responseDialog) {
-          setMessageFoundStatus(true);
-
-          return;
-        }
-
-        setDialogMultipleStatus(responseDialog.participants.length > 2);
-
-        setMessageList(responseDialog.messages);
-        setMessageFoundStatus(false);
-      },
-    );
-  }, [recipient.id]);
-
-  useEffect(() => {
-    socket.on('newMessage', (message: Message) => {
-      setMessageList([...messageList, message]);
-      setMessageFoundStatus(false);
-    });
-
-    return () => {
-      socket.removeListener('newMessage');
-    };
-  });
-
-  useEffect(() => {
     scrollToBottom();
-  }, [messageList]);
+  }, [props.messages]);
 
-  if (messageNotFound) {
+  if (props.messageNotFound) {
     return (
       <NotFoundWrapper>
         <span>К сожалению, сообщений не найдено</span>
@@ -84,7 +53,7 @@ export const MessageList = () => {
         <MessageGroup
           messages={messages}
           key={messages[0]._id}
-          dialogIsMultiple={dialogIsMultiple}
+          dialogIsMultiple={props.dialogIsMultiple}
         />
       ))}
       <div ref={messagesEndRef} />

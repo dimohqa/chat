@@ -67,13 +67,24 @@ export class DialogGateway {
       return null;
     }
 
-    return await this.dialogModel.populate(dialog, {
-      path: 'messages',
-      model: Message.name,
-      populate: {
-        path: 'author',
-        model: User.name,
+    return await this.dialogModel.populate(dialog, [
+      {
+        path: 'messages',
+        model: Message.name,
+        populate: {
+          path: 'author',
+          model: User.name,
+        },
       },
-    });
+      {
+        path: 'participants',
+        model: User.name,
+        select: {
+          avatar: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
+    ]);
   }
 }

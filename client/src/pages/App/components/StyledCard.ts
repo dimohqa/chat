@@ -4,6 +4,7 @@ import { Card } from 'antd';
 export const StyledCard = styled(Card)<{ $isActive?: boolean }>`
   padding: 8px 12px 8px 8px;
   height: 74px;
+  border: 0;
   background-color: ${props =>
     props.$isActive ? 'rgba(24, 144, 255, 0.1)' : '#f3f4f6'};
 

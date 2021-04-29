@@ -35,7 +35,7 @@ export const DialogCard = (props: Props) => {
     <StyledCard $isActive={props.isActive} onClick={openChatFrame}>
       <Avatar
         size={56}
-        src={props.user.avatar}
+        src={`/${props.user.avatar}`}
         icon={!props.user.avatar && <UserOutlined />}
       />
       <Content>
@@ -44,7 +44,7 @@ export const DialogCard = (props: Props) => {
           <Space size={4}>
             <Avatar
               size={22}
-              src={props.latestMessage.author.avatar}
+              src={`/${props.latestMessage.author.avatar}`}
               icon={!props.latestMessage.author.avatar && <UserOutlined />}
             />
             <span>{props.latestMessage.content}</span>

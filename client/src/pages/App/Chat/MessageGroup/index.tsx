@@ -37,7 +37,7 @@ export const MessageGroup = (props: Props) => {
     <MessageGroupWrapper>
       <AuthorAvatar
         size={32}
-        src={author.avatar}
+        src={`/${author.avatar}`}
         icon={!author.avatar && <UserOutlined />}
       />
       <Group>

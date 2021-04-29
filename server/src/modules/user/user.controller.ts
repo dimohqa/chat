@@ -18,7 +18,6 @@ import { UserId } from '../../helpers/user-id.decorator';
 import { AuthGuard } from '../../middlewares/auth.guard';
 import { diskStorage } from 'multer';
 import { extname } from 'path';
-import { Types } from 'mongoose';
 
 @Controller('user')
 export class UserController {

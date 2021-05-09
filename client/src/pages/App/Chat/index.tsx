@@ -15,30 +15,46 @@ export const Chat = () => {
   const [dialogName, setDialogName] = useState<string>('');
   const [messageNotFound, setMessageFoundStatus] = useState<boolean>(false);
 
-  const recipient = useParams<{ id: string }>();
+  const params = useParams<{ id: string; section: string }>();
+
+  const setStateRoom = (responseRoom: Dialog) => {
+    if (!responseRoom) {
+      setMessageFoundStatus(true);
+
+      return;
+    }
+
+    if (responseRoom.name) {
+      setDialogName(responseRoom.name);
+    }
+
+    setParticipantsDialog(responseRoom.participants);
+    setMessageList(responseRoom.messages);
+
+    setMessageFoundStatus(false);
+  };
 
   useEffect(() => {
+    if (params.section === 'chat') {
+      socket.emit(
+        'getRoomById',
+        { roomId: params.id },
+        (responseRoom: Dialog) => {
+          setStateRoom(responseRoom);
+        },
+      );
+
+      return;
+    }
+
     socket.emit(
       'getDialog',
-      { recipientId: recipient.id },
+      { recipientId: params.id },
       (responseDialog: Dialog) => {
-        if (!responseDialog) {
-          setMessageFoundStatus(true);
-
-          return;
-        }
-
-        if (responseDialog.name) {
-          setDialogName(responseDialog.name);
-        }
-
-        setParticipantsDialog(responseDialog.participants);
-        setMessageList(responseDialog.messages);
-
-        setMessageFoundStatus(false);
+        setStateRoom(responseDialog);
       },
     );
-  }, [recipient.id]);
+  }, [params]);
 
   useEffect(() => {
     socket.on('newMessage', (message: Message) => {

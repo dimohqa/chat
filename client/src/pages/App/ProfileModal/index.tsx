@@ -23,11 +23,13 @@ const layout = {
 };
 
 type Props = {
-  profile: { [index: string]: string } & User;
+  profile: User;
   visible: boolean;
   onClose: () => void;
   onChangeUserProfile: (user: User) => void;
 };
+
+type ProfileKeys = keyof Props['profile'];
 
 export const ProfileModal = (props: Props) => {
   const [form] = useForm();
@@ -40,7 +42,9 @@ export const ProfileModal = (props: Props) => {
     setChangedUserDataLoadingStatus(true);
 
     const newData = Object.keys(form.getFieldsValue())
-      .filter(key => form.getFieldValue(key) !== props.profile[key])
+      .filter(
+        key => form.getFieldValue(key) !== props.profile[key as ProfileKeys],
+      )
       .reduce(
         (res, key) => ({
           ...res,

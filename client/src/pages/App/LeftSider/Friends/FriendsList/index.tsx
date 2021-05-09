@@ -13,8 +13,6 @@ export const FriendsList = (props: Props) => {
 
   const currentUser = useParams<{ id: string }>();
 
-  const isActive = (userId: string) => currentUser.id === userId;
-
   const changeFriendsList = (id: string) => {
     props.onChangeFriends(props.friends.filter(friend => friend._id !== id));
   };
@@ -32,7 +30,7 @@ export const FriendsList = (props: Props) => {
           user={friend}
           changeFriendStatus={changeFriendsList}
           onClick={openChatWindow}
-          isActive={isActive(friend._id)}
+          isActive={currentUser.id === friend._id}
         />
       ))}
     </div>

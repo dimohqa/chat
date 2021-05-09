@@ -15,13 +15,10 @@ export const DialogsList = () => {
 
   const userId = useSelector((state: RootState) => state.user.userId);
 
-  const currentDialog = useParams<{ id: string }>();
+  const room = useParams<{ id: string }>();
 
   const getParticipant = (dialog: Dialog) =>
     dialog.participants.filter(participant => participant._id !== userId)[0];
-
-  const getActiveDialog = (dialog: Dialog) =>
-    getParticipant(dialog)._id === currentDialog.id;
 
   useEffect(() => {
     socket.emit('dialogs', null, (newDialogs: Dialog[]) =>
@@ -45,7 +42,8 @@ export const DialogsList = () => {
             key={dialog._id}
             user={getParticipant(dialog)}
             latestMessage={dialog.messages[0]}
-            isActive={getActiveDialog(dialog)}
+            isActive={dialog._id === room.id}
+            roomId={dialog._id}
           />
         ))}
       </Spin>

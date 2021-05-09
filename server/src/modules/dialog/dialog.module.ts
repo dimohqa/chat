@@ -6,6 +6,7 @@ import { DialogSchema } from '../../schemas/dialog.schema';
 import { Dialog } from '../../schemas/dialog.schema';
 import { MessagesService } from '../messages/messages.service';
 import { Message, MessageSchema } from '../../schemas/message.schema';
+import { User, UserSchema } from '../../schemas/user.schema';
 
 @Module({
   imports: [
@@ -17,6 +18,10 @@ import { Message, MessageSchema } from '../../schemas/message.schema';
       {
         name: Message.name,
         schema: MessageSchema,
+      },
+      {
+        name: User.name,
+        schema: UserSchema,
       },
     ]),
   ],

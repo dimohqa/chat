@@ -25,7 +25,7 @@ export const App = () => {
       dispatch(setConnectedStatus(body.connection));
       dispatch(setUserId(body.userId));
     });
-  }, [dispatch]);
+  }, []);
 
   if (!isConnectedSocket) {
     return <Loader size="large" />;
@@ -35,7 +35,7 @@ export const App = () => {
     <Layout style={{ height: '100%' }}>
       <NavSider />
       <LeftSider />
-      <Route path="/(chat|friends)/:id">
+      <Route path="/:section/:id">
         <Chat />
       </Route>
     </Layout>

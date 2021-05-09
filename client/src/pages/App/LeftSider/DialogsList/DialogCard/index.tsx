@@ -11,6 +11,7 @@ type Props = {
   user: Friend;
   latestMessage: Message;
   isActive: boolean;
+  roomId: string;
 };
 
 export const DialogCard = (props: Props) => {
@@ -28,7 +29,8 @@ export const DialogCard = (props: Props) => {
     if (props.isActive) {
       return;
     }
-    history.push(`/chat/${props.user._id}`);
+
+    history.push(`/chat/${props.roomId}`);
   };
 
   return (

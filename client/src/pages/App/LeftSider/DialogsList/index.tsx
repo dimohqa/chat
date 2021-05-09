@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Layout, Spin } from 'antd';
+import { Spin } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import { Dialog } from '@/types/Dialog';
 import { useSelector } from 'react-redux';
@@ -8,6 +8,7 @@ import { useParams } from 'react-router';
 import { socket } from '../../../../helpers/socket';
 import { SearchInput } from '../../components/SearchInput';
 import { DialogCard } from './DialogCard';
+import { FullHeightLayout, ScrollContainer } from '../../components/Container';
 
 export const DialogsList = () => {
   const [searchValue, setSearchValue] = useState<string>('');
@@ -27,7 +28,7 @@ export const DialogsList = () => {
   }, []);
 
   return (
-    <Layout>
+    <FullHeightLayout>
       <Header style={{ backgroundColor: '#f3f4f6' }}>
         <SearchInput
           searchValue={searchValue}
@@ -36,17 +37,19 @@ export const DialogsList = () => {
           callbackApi={() => {}}
         />
       </Header>
-      <Spin spinning={false}>
-        {dialogs.map(dialog => (
-          <DialogCard
-            key={dialog._id}
-            user={getParticipant(dialog)}
-            latestMessage={dialog.messages[0]}
-            isActive={dialog._id === room.id}
-            roomId={dialog._id}
-          />
-        ))}
-      </Spin>
-    </Layout>
+      <ScrollContainer>
+        <Spin spinning={false}>
+          {dialogs.map(dialog => (
+            <DialogCard
+              key={dialog._id}
+              user={getParticipant(dialog)}
+              latestMessage={dialog.messages[0]}
+              isActive={dialog._id === room.id}
+              roomId={dialog._id}
+            />
+          ))}
+        </Spin>
+      </ScrollContainer>
+    </FullHeightLayout>
   );
 };

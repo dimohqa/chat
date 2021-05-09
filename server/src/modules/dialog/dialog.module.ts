@@ -19,10 +19,6 @@ import { User, UserSchema } from '../../schemas/user.schema';
         name: Message.name,
         schema: MessageSchema,
       },
-      {
-        name: User.name,
-        schema: UserSchema,
-      },
     ]),
   ],
   providers: [DialogGateway, DialogService, MessagesService],

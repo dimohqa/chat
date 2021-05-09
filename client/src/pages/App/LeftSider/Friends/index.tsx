@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { Layout, Spin } from 'antd';
+import { Spin } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import { friendsApi } from '@/api/friends';
 import styled from 'styled-components';
 import { Friend } from '@/types/Friend';
 import { SearchInput } from '../../components/SearchInput';
 import { FriendsList } from './FriendsList';
+import { FullHeightLayout, ScrollContainer } from '../../components/Container';
 
 import './Friends.css';
 
@@ -52,7 +53,7 @@ export const Friends = () => {
   }, []);
 
   return (
-    <Layout>
+    <FullHeightLayout>
       <Header style={{ backgroundColor: '#f3f4f6' }}>
         <SearchInput
           searchValue={searchValue}
@@ -61,18 +62,20 @@ export const Friends = () => {
           onChangeSearchValue={setSearchValue}
         />
       </Header>
-      <Spin
-        spinning={searchFriendsIsFetching}
-        wrapperClassName="friends__spin-wrapper"
-      >
-        <FriendsList friends={friends} onChangeFriends={setFriends} />
-        {friendsIsNotFound && !searchFriendsIsFetching && (
-          <NotFound>К сожалению, ничего не найдено</NotFound>
-        )}
-        {friendsIsNotYet && !searchFriendsIsFetching && (
-          <NotFound>К сожалению, у вас пока нет друзей</NotFound>
-        )}
-      </Spin>
-    </Layout>
+      <ScrollContainer>
+        <Spin
+          spinning={searchFriendsIsFetching}
+          wrapperClassName="friends__spin-wrapper"
+        >
+          <FriendsList friends={friends} onChangeFriends={setFriends} />
+          {friendsIsNotFound && !searchFriendsIsFetching && (
+            <NotFound>К сожалению, ничего не найдено</NotFound>
+          )}
+          {friendsIsNotYet && !searchFriendsIsFetching && (
+            <NotFound>К сожалению, у вас пока нет друзей</NotFound>
+          )}
+        </Spin>
+      </ScrollContainer>
+    </FullHeightLayout>
   );
 };

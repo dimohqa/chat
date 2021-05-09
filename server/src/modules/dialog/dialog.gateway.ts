@@ -12,14 +12,13 @@ import { Model, Types } from 'mongoose';
 import { MessagesService } from '../messages/messages.service';
 import { Message } from '../../schemas/message.schema';
 import { User } from '../../schemas/user.schema';
-const { ObjectId } = Types;
 
 @WebSocketGateway()
 export class DialogGateway {
   constructor(
-    private readonly dialogService: DialogService,
     @InjectModel(Dialog.name)
     private readonly dialogModel: Model<DialogDocument>,
+    private readonly dialogService: DialogService,
     private readonly messagesService: MessagesService,
   ) {}
 
@@ -94,14 +93,13 @@ export class DialogGateway {
     );
 
     if (!dialog) {
-      return new this.dialogModel({
-        participants: [
-          ObjectId(body.recipientId),
-          ObjectId(client.request.userId),
-        ],
+      const localRoom = await new this.dialogModel({
+        participants: [body.recipientId, client.request.userId],
         messages: [],
         name: '',
-      }).populate({
+      });
+
+      return this.dialogModel.populate(localRoom, {
         model: User.name,
         path: 'participants',
         select: {

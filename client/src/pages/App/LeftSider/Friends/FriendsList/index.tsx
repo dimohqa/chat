@@ -22,7 +22,7 @@ export const FriendsList = (props: Props) => {
   };
 
   return (
-    <div>
+    <>
       {props.friends.map(friend => (
         <UserCard
           isFriend
@@ -33,6 +33,6 @@ export const FriendsList = (props: Props) => {
           isActive={currentUser.id === friend._id}
         />
       ))}
-    </div>
+    </>
   );
 };

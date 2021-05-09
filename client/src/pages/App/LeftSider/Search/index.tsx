@@ -1,5 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import { Button, Layout, Spin } from 'antd';
+import { Button, Spin } from 'antd';
 import { Header } from 'antd/es/layout/layout';
 import { SearchUser } from '@/types/User';
 import { userApi } from '@/api/user';
@@ -7,15 +7,11 @@ import styled from 'styled-components';
 import { useHistory, useParams } from 'react-router';
 import { UserCard } from '../../components/UserCard';
 import { SearchInput } from '../../components/SearchInput';
+import { FullHeightLayout, ScrollContainer } from '../../components/Container';
 
 const NotFound = styled.span`
   display: flex;
   justify-content: center;
-`;
-
-const FriendsListContainer = styled.div`
-  height: 100vh;
-  overflow: auto;
 `;
 
 const UploadMoreContainer = styled.div`
@@ -101,7 +97,7 @@ export const Search = () => {
   };
 
   return (
-    <Layout style={{ height: '100vh' }}>
+    <FullHeightLayout>
       <Header style={{ backgroundColor: '#f3f4f6' }}>
         <SearchInput
           searchValue={searchValue}
@@ -110,7 +106,7 @@ export const Search = () => {
           callbackApi={onSearchUsers}
         />
       </Header>
-      <FriendsListContainer>
+      <ScrollContainer>
         <Spin spinning={usersIsFetching}>
           {usersList.map(user => (
             <UserCard
@@ -134,7 +130,7 @@ export const Search = () => {
             <NotFound>К сожалению, таких пользователей не найдено.</NotFound>
           )}
         </Spin>
-      </FriendsListContainer>
-    </Layout>
+      </ScrollContainer>
+    </FullHeightLayout>
   );
 };

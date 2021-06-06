@@ -1,2 +1,7 @@
-export const upperCaseFirstSymbol = (string: string) =>
-  string[0].toUpperCase() + string.slice(1);
+export const upperCaseFirstSymbol = (string: string) => {
+  if (!string) {
+    return string;
+  }
+
+  return string[0].toUpperCase() + string.slice(1);
+};
